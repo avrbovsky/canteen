@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Col, Input, Row } from "reactstrap";
+import { Button, Col, Input, InputGroup, InputGroupText, Row } from "reactstrap";
 
 export const GetKeyPage = () => {
     const [privateKey, setPrivateKey] = useState<string>('');
@@ -20,12 +20,20 @@ export const GetKeyPage = () => {
             <h3>GET RANDOM ASSYMETRIC KEY</h3>
             <Row>
                 <Col>
-                <p>Private key</p>
-                    <Input type="text" disabled value={privateKey} />
+                    <InputGroup>
+                        <InputGroupText>
+                        Private Key
+                        </InputGroupText>
+                        <Input type="text" disabled value={privateKey} />
+                    </InputGroup>
                 </Col>
                 <Col>
-                <p>Public key</p>
-                    <Input type="text" disabled value={publicKey} />
+                    <InputGroup>
+                        <InputGroupText>
+                        Public Key
+                        </InputGroupText>
+                        <Input type="text" disabled value={publicKey} />
+                    </InputGroup>
                 </Col>
             </Row>
             <Button color="primary" onClick={handleGetKeys} style={{marginTop: '15px'}} >Get random keys</Button>
