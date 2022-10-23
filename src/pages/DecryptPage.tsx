@@ -12,7 +12,7 @@ export const DecryptPage = () =>{
     }
 
     const handleDownloadEncrypt = () => {
-        fetch(`http://127.0.0.1:8080/downloadFile/decrypted_${fileName}`)
+        fetch(`http://147.175.121.185/downloadFile/decrypted_${fileName}`)
         .then(resp => resp.blob())
         .then(blob => {
             const url = window.URL.createObjectURL(blob);
@@ -38,7 +38,7 @@ export const DecryptPage = () =>{
             mode: 'no-cors' as RequestMode,
           };
           
-          fetch("http://localhost:8080/upload", requestOptions)
+          fetch("http://147.175.121.185/upload", requestOptions)
             .then(response => response.text())
             .then(result => {console.log(result); setFileUploading(false)})
             .catch(error => console.log('error', error));

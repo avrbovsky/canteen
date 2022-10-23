@@ -6,7 +6,7 @@ export const GetKeyPage = () => {
     const [publicKey, setPublicKey] = useState<string>('');
 
     const handleGetKeys = () => {
-        fetch("http://localhost:8080/generate-assymetric-key")
+        fetch("http://147.175.121.185/generate-assymetric-key")
             .then(response => response.json())
             .then(result => {
                 setPrivateKey(result.privateKey);
