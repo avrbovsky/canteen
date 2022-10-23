@@ -1,9 +1,16 @@
-import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { Layout } from './Layout';
+import { Routes } from './Routes';
 
 function App() {
   return (
-    <h1>CANTEEN</h1>
-  );
+    <Router>
+      <Layout>
+        <Routes />
+      </Layout>
+    </Router>
+  )
 }
 
 export default App;
