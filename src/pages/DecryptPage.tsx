@@ -1,24 +1,55 @@
 import React, { useState } from 'react';
 import {Input, Button} from 'reactstrap';
 
-export const DecryptPage = () => {
-    const [file, setFile] = useState<{}>();
-    const [publicKey, setPublicKey] = useState<string>('');
+export const DecryptPage = () =>{
+    const [file, setFile] = useState<File>();
+    const [fileName, setFileName] = useState<String>();
+    const [fileUploading, setFileUploading] = useState<boolean>(false);
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setFile(e.target.files![0])
+        const uploadedFile = e.target.files![0]
+        setFile(uploadedFile);
     }
 
-    const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-        setPublicKey(e.target.value)
+    const handleDownloadEncrypt = () => {
+        fetch(`http://127.0.0.1:8080/downloadFile/decrypted_${fileName}`)
+        .then(resp => resp.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            const name = fileName?.replace('.txt', '');
+            link.setAttribute('download', `decrypted_${fileName}`);
+            document.body.appendChild(link);
+            link.click();
+        })
+        .catch(() => console.log("oh no!"));
+    }
+
+    const handleEncrypt = () => {
+        const name = file!.name.replace('encrypted_', '');
+        setFileName(name);
+        setFileUploading(true);
+        const bodyFormData = new FormData();
+        bodyFormData.append('file', file!, file!.name);
+        const requestOptions = {
+            method: 'POST',
+            body: bodyFormData,
+            mode: 'no-cors' as RequestMode,
+          };
+          
+          fetch("http://localhost:8080/upload", requestOptions)
+            .then(response => response.text())
+            .then(result => {console.log(result); setFileUploading(false)})
+            .catch(error => console.log('error', error));
     }
 
     return (
         <div style={{width: '80%', backgroundColor: 'gray', marginLeft: 'auto', marginRight: 'auto', textAlign: 'center', padding: '20px'}}>
-            <h3>UPLOAD A FILE TO DECRYPT USING PRIVATE KEY</h3>
-            <Input onChange={handleFileSelect} type="file" />
-            <Input style={{marginTop: '5px'}} onChange={handleTextChange} type='text' placeholder='Enter private key' />
-            <Button style={{marginTop: '15px'}} color='primary' disabled={!file || !publicKey}>Decrypt</Button>
+            <h3>UPLOAD A FILE TO DECRYPT</h3>
+            <Input onChange={handleFileSelect} type="file" style={{marginBottom: '15px'}}/>
+            <Button style={{marginRight: '10px'}} color='primary' disabled={!file} onClick={handleEncrypt} >Decrypt</Button>
+            <Button style={{marginRight: '10px'}} onClick={handleDownloadEncrypt} disabled={!fileName} >Download Decrypted File</Button>
         </div>
     )
 }
