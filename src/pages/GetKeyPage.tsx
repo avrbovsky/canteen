@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { Button, Col, Input, InputGroup, InputGroupText, Row } from "reactstrap";
+import { url } from "../config";
 
 export const GetKeyPage = () => {
     const [privateKey, setPrivateKey] = useState<string>('');
     const [publicKey, setPublicKey] = useState<string>('');
 
     const handleGetKeys = () => {
-        fetch("http://147.175.121.185/generate-assymetric-key")
+        fetch(`${url}/generate-assymetric-key`)
             .then(response => response.json())
             .then(result => {
                 setPrivateKey(result.privateKey);

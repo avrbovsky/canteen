@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {Input, Button} from 'reactstrap';
+import { url } from '../config';
 
 export const HomePage = () =>{
     const [file, setFile] = useState<File>();
@@ -12,7 +13,7 @@ export const HomePage = () =>{
     }
 
     const handleDownloadKey = () => {
-        fetch(`http://147.175.121.185/downloadFile/key_${fileName}`)
+        fetch(`${url}/downloadFile/key_${fileName}`)
         .then(resp => resp.blob())
         .then(blob => {
             const url = window.URL.createObjectURL(blob);
@@ -27,7 +28,7 @@ export const HomePage = () =>{
     }
 
     const handleDownloadEncrypt = () => {
-        fetch(`http://147.175.121.185/downloadFile/encrypted_${fileName}`)
+        fetch(`${url}/downloadFile/encrypted_${fileName}`)
         .then(resp => resp.blob())
         .then(blob => {
             const url = window.URL.createObjectURL(blob);
@@ -52,7 +53,7 @@ export const HomePage = () =>{
             mode: 'no-cors' as RequestMode,
           };
           
-          fetch("http://147.175.121.185/upload", requestOptions)
+          fetch(`${url}/upload`, requestOptions)
             .then(response => response.text())
             .then(result => {console.log(result); setFileUploading(false)})
             .catch(error => console.log('error', error));
