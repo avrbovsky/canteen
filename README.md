@@ -1,3 +1,14 @@
+# First of all you'll need to install "npm" packet manager
+To do so, open download link at https://nodejs.org/en/download/.
+
+# Then you'll need to download "nvm" node version manager
+Open https://github.com/coreybutler/nvm-windows/releases and download "nvm-setup.zip".
+Extract file and run nvm-setup.exe
+Restart your IDE
+
+Once you have restarted your IDE run nvm use in your terminal. If this will not work copy node version from .nvmrc and run nvm use with that version
+After that all you need to do is run npm i
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
