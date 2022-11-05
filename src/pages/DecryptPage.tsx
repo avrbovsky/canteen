@@ -19,7 +19,7 @@ export const DecryptPage = () =>{
             const link = document.createElement('a');
             link.href = url;
             const name = fileName?.replace('.txt', '');
-            link.setAttribute('download', `decrypted_${fileName}`);
+            link.setAttribute('download', `decrypted_${name}`);
             document.body.appendChild(link);
             link.click();
         })

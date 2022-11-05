@@ -19,7 +19,7 @@ export const HomePage = () =>{
             const link = document.createElement('a');
             link.href = url;
             const name = fileName?.replace('.txt', '');
-            link.setAttribute('download', `key_${fileName}`);
+            link.setAttribute('download', `key_${name}`);
             document.body.appendChild(link);
             link.click();
         })
@@ -34,7 +34,7 @@ export const HomePage = () =>{
             const link = document.createElement('a');
             link.href = url;
             const name = fileName?.replace('.txt', '');
-            link.setAttribute('download', `encrypted_${fileName}`);
+            link.setAttribute('download', `encrypted_${name}`);
             document.body.appendChild(link);
             link.click();
         })
