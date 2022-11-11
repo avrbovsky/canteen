@@ -15,6 +15,12 @@ export const Header = (): JSX.Element => {
                 <NavItem>
                     <NavLink href="/decrypt">Decrypt</NavLink>
                 </NavItem>
+                <NavItem>
+                    <NavLink href="/login">Login</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink href="/register">Register</NavLink>
+                </NavItem>
             </Nav>
         </Navbar>
     </div>
