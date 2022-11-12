@@ -1,6 +1,8 @@
 import React, { useState, useEffect, ReactElement } from "react";
 import { Input, Button, Form } from "reactstrap";
 import { url } from "../config";
+import { sha256 } from 'js-sha256';
+import { Buffer } from "buffer";
 
 export const RegisterPage = () => {
 
@@ -13,16 +15,17 @@ export const RegisterPage = () => {
   const [error, setError] = useState({
     username: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   })
 
-  const [validLength, setValidLength] = useState(false);
-  const [hasNumber, setHasNumber] = useState(false);
-  const [upperCase, setUpperCase] = useState(false);
-  const [lowerCase, setLowerCase] = useState(false);
-  const [specialChar, setSpecialChar] = useState(false);
-  const [match, setMatch] = useState(false);
-  const [requiredLength, setRequiredLength] = useState(8);
+  const [validLength, setValidLength] = useState<boolean>(false);
+  const [hasNumber, setHasNumber] = useState<boolean>(false);
+  const [upperCase, setUpperCase] = useState<boolean>(false);
+  const [lowerCase, setLowerCase] = useState<boolean>(false);
+  const [specialChar, setSpecialChar] = useState<boolean>(false);
+  const [match, setMatch] = useState<boolean>(false);
+  const [leakedPassword,setLeakePassword] = useState<boolean>(false);
+  const [requiredLength, setRequiredLength] = useState<number>(8);
 
   useEffect(() => {
     setValidLength(
@@ -43,6 +46,33 @@ export const RegisterPage = () => {
       /[ `!@#$%^&*()_+\-=\]{};':"\\|,.<>?~]/.test(input.password)
     );
   }, [input.password, requiredLength]);
+
+  
+  const checkCompomisedPassword = () => {
+    fetch(`https://api.enzoic.com/passwords`, {
+      method: 'POST',
+      body: JSON.stringify({
+        partialSHA256: String(sha256.create().update(input.password)).substring(0, 10),
+          }),
+      headers: {
+        'authorization': "basic "+(Buffer.from('c9be553a50e743afa8a851b82c36be4e'+":"+'drr3cN!B*xr^j@STvAgW*yt9trh8dYmD').toString('base64')),
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+    .then(response => response.json())
+    .then(result => {
+      console.log(result)
+      if(result.candidates[0].revealedInExposure== true){
+        setLeakePassword(true)
+        console.log("Leaked password")
+      }
+    })
+    .catch(error => console.log('error', error));
+     if (error) {
+        console.log('Error calling API');
+    }
+}
+
 
   const handleRegister = () => {
     fetch(`${url}/register`, {
@@ -91,7 +121,7 @@ export const RegisterPage = () => {
             stateObj[name] = "Please enter Password.";
           } else if (input.confirmPassword && value !== input.confirmPassword) {
             stateObj["confirmPassword"] = "Password and Confirm Password does not match.";
-          } else {
+          }else {
             stateObj["confirmPassword"] = input.confirmPassword ? "" : error.confirmPassword;
           }
           break;
@@ -103,6 +133,7 @@ export const RegisterPage = () => {
             stateObj[name] = "Password and Confirm Password does not match.";
           }
           break;
+
 
         default:
           break;
@@ -145,7 +176,7 @@ export const RegisterPage = () => {
           placeholder='Enter Password'
           value={input.password}
           onChange={onInputChange}
-          onBlur={e => {validateInput}}
+          onBlur={(e) => {checkCompomisedPassword();onInputChange(e)}}
           required></Input>
         {error.password && <span className='err'>{error.password}</span>}
 
@@ -161,7 +192,10 @@ export const RegisterPage = () => {
 
         <br />
       <span>
-        {validLength ? <span></span> : <span>Password has not valid length.</span>} 
+        {leakedPassword ? <span>Password is leaked.</span>: <span></span> } 
+      </span>
+      <span>
+        {leakedPassword ? <span></span> : <span>Password has not valid length.</span>} 
       </span>
       <br />
       <span>
@@ -173,7 +207,7 @@ export const RegisterPage = () => {
       </span>
       <br />
       <span>
-        {lowerCase ? <span></span> : <span>Password has not lowercase letters.</span>}
+        {!lowerCase ? <span></span> : <span>Password has not lowercase letters.</span>}
       </span>
       <br/>
       <span>
