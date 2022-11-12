@@ -66,6 +66,10 @@ export const RegisterPage = () => {
         setLeakePassword(true)
         console.log("Leaked password")
       }
+      if(result.candidates[0].revealedInExposure== false){
+        setLeakePassword(false)
+        console.log("Password is safe")
+      }
     })
     .catch(error => console.log('error', error));
      if (error) {
@@ -75,6 +79,9 @@ export const RegisterPage = () => {
 
 
   const handleRegister = () => {
+    if (leakedPassword){
+      return;
+    }
     fetch(`${url}/register`, {
       method: 'POST',
       body: JSON.stringify({
