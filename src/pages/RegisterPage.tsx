@@ -1,5 +1,6 @@
 import React, { useState, useEffect, ReactElement } from "react";
 import { Input, Button, Form } from "reactstrap";
+import { url } from "../config";
 
 export const RegisterPage = () => {
 
@@ -42,6 +43,23 @@ export const RegisterPage = () => {
       /[ `!@#$%^&*()_+\-=\]{};':"\\|,.<>?~]/.test(input.password)
     );
   }, [input.password, requiredLength]);
+
+  const handleRegister = () => {
+    fetch(`${url}/register`, {
+      method: 'POST',
+      body: JSON.stringify({
+        "username": input.username,
+        "password": input.password
+      }),
+      headers: {
+        'Content-type': 'application/json; charset=UTF-8',
+      },
+    })
+    .then(response => response.json())
+    .then(result => {
+    })
+    .catch(error => console.log('error', error));
+}
 
   const onInputChange: (event: React.ChangeEvent<HTMLInputElement>) => void = (
     event
@@ -111,7 +129,6 @@ export const RegisterPage = () => {
         upper and lower case letters and special characters. The password must
         not be easy to guess.
       </span>
-      <Form>
         <Input
           type="text"
           name="username"
@@ -128,7 +145,7 @@ export const RegisterPage = () => {
           placeholder='Enter Password'
           value={input.password}
           onChange={onInputChange}
-          onBlur={validateInput}
+          onBlur={e => {validateInput}}
           required></Input>
         {error.password && <span className='err'>{error.password}</span>}
 
@@ -164,8 +181,7 @@ export const RegisterPage = () => {
       </span>
       <br />
         
-        <Button>Submit</Button>
-      </Form>
+        <Button onClick={handleRegister}>Submit</Button>
     </div>
   );
 }
