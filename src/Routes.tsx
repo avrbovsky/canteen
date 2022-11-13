@@ -4,8 +4,9 @@ import { EncryptPage } from './pages/EncryptPage';
 import { GetKeyPage } from './pages/GetKeyPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
+import { ReceivedMessagesPage } from './pages/ReceivedMessagesPage';
 import { RegisterPage } from './pages/RegisterPage';
-
+import { SendFilePage } from './pages/SendFilePage';
 
 export const Routes = () => {
   return (
@@ -16,6 +17,8 @@ export const Routes = () => {
       <Route path="/decrypt" element={<DecryptPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
+      <Route path="/send_file" element={<SendFilePage />} />
+      <Route path="/check_messages" element={<ReceivedMessagesPage />} />
     </RouterRoutes>
   );
 };
