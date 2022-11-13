@@ -1,7 +1,9 @@
 import { Button, Table } from "reactstrap";
 import { useEffect, useState } from "react";
+import { url } from "../config";
+import { message, user } from "../types";
 
-type message = {
+type receivedMessage = {
   id: number;
   login: string;
   filename: string;
@@ -14,19 +16,57 @@ const mockedMessages = [
 ];
 
 export const MessageTable = () => {
-  const [messages, setMessages] = useState<message[]>([]);
+  const [messages, setMessages] = useState<receivedMessage[]>([]);
+  const [users, setUsers] = useState<user[]>([]);
 
   const handleFileDownload = (filename: string) => {
     //download file
   };
 
   useEffect(() => {
-    //fetchovanie sprav
-    setMessages(mockedMessages);
+    fetch(`${url}/api/users`)
+      .then((response) => response.json())
+      .then((result: user[]) => {
+        setUsers(result);
+      })
+      .catch((error) => console.log("error", error));
   }, []);
 
+  useEffect(() => {
+    fetch(`${url}/JEBNI SEM ENDPOINT`)
+      .then((response) => response.json())
+      .then((result: message[]) => {
+        const messages: receivedMessage[] = result.map((message) => {
+          const sender = users.find((user) => user.id === message.sender_id);
+          return {
+            id: message.message_id,
+            login: sender!.login,
+            filename: message.filename,
+            sent_time: message.sent_time.toString(),
+          };
+        });
+        setMessages(messages);
+      })
+      .catch((error) => console.log("error", error));
+    setMessages(mockedMessages);
+  }, [users]);
+
   const onRefresh = () => {
-    //fetchni spravy
+    fetch(`${url}/JEBNI SEM ENDPOINT`)
+      .then((response) => response.json())
+      .then((result: message[]) => {
+        const messages: receivedMessage[] = result.map((message) => {
+          const sender = users.find((user) => user.id === message.sender_id);
+          return {
+            id: message.message_id,
+            login: sender!.login,
+            filename: message.filename,
+            sent_time: message.sent_time.toString(),
+          };
+        });
+        setMessages(messages);
+      })
+      .catch((error) => console.log("error", error));
     setMessages(mockedMessages);
   };
 
