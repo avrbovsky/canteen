@@ -1,7 +1,8 @@
 import { Button, Table } from "reactstrap";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { url } from "../config";
 import { message, user } from "../types";
+import { UserContext } from "../contexts/UserContext";
 
 type receivedMessage = {
   id: number;
@@ -18,6 +19,7 @@ const mockedMessages = [
 export const MessageTable = () => {
   const [messages, setMessages] = useState<receivedMessage[]>([]);
   const [users, setUsers] = useState<user[]>([]);
+  const { currentUser } = useContext(UserContext);
 
   const handleFileDownload = (filename: string) => {
     //download file
@@ -33,7 +35,7 @@ export const MessageTable = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${url}/JEBNI SEM ENDPOINT`)
+    fetch(`${url}/messages/${currentUser!.id}`)
       .then((response) => response.json())
       .then((result: message[]) => {
         const messages: receivedMessage[] = result.map((message) => {
