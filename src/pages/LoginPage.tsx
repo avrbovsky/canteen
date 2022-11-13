@@ -10,14 +10,18 @@ export const LoginPage = () => {
     fetch(`${url}/login`, {
       method: "POST",
       body: JSON.stringify({
-        username: username,
+        login: username,
         password: password,
       }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if(!response.ok){
+          console.log('log in')
+        };
+        response.json()})
       .then((result) => {})
       .catch((error) => console.log("error", error));
   };

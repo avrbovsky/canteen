@@ -30,10 +30,10 @@ export const RegisterPage = () => {
   }, [password]);
 
   const handleRegister = () => {
-    fetch(`${url}/register`, {
+    fetch(`${url}/registration`, {
       method: "POST",
       body: JSON.stringify({
-        username: username,
+        login: username,
         password: password,
       }),
       headers: {
