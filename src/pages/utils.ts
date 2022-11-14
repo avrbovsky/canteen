@@ -20,15 +20,13 @@ export const checkCompromisedPassword = (password: string, setLeaked: any) => {
       "Content-type": "application/json; charset=UTF-8",
     },
   })
-    .then((response) => response.json())
-    .then((result) => {
-      console.log(result);
-      if (result.candidates[0].revealedInExposure == true) {
-        setLeaked(true);
-      }
-      if (result.candidates[0].revealedInExposure == false) {
-        setLeaked(false);
-      }
-    })
-    .catch((error) => console.log("error", error));
+  .then((response) => {
+    if(response.ok){
+      setLeaked(true);
+      throw new Error("Leaked password")
+    }else{
+      setLeaked(false);
+    };
+   })
+  .catch((error) => console.log("Error", error));
 };
