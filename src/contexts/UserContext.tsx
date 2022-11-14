@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, Dispatch } from "react";
+import { createContext, useState, Dispatch, ReactNode } from "react";
 import { user } from "../types";
 
 type context = {
@@ -11,7 +11,11 @@ export const UserContext = createContext<context>({
   currentUser: undefined,
 });
 
-export const UserProvider = (children: React.ReactNode) => {
+type Props = {
+  children: JSX.Element;
+};
+
+export const UserProvider = ({ children }: Props) => {
   const [currentUser, setCurrentUser] = useState<user | undefined>();
   const value = { currentUser, setCurrentUser };
 

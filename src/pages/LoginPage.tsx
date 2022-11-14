@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Input, Button, Form, FormGroup, FormFeedback } from "reactstrap";
 import { url } from "../config";
+import { UserContext } from "../contexts/UserContext";
+import { user } from "../types";
 
 export const LoginPage = () => {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const { setCurrentUser } = useContext(UserContext);
 
   const handleLogin = () => {
     fetch(`${url}/login`, {
@@ -18,11 +21,15 @@ export const LoginPage = () => {
       },
     })
       .then((response) => {
-        if(!response.ok){
-          console.log('log in')
-        };
-        response.json()})
-      .then((result) => {})
+        if (response.ok) {
+          fetch(`${url}/api/user/${username}`)
+            .then((response) => response.json())
+            .then((result: user) => {
+              setCurrentUser(result);
+            })
+            .catch((error) => console.log("error", error));
+        }
+      })
       .catch((error) => console.log("error", error));
   };
 

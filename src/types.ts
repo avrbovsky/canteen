@@ -17,6 +17,8 @@ export type user = {
   login: string;
   password: string;
   salt: string;
+  publicKey: string;
+  privateKey: string;
   receivedMessages: message[];
   sentMessages: message[];
   userLoginAttempts: loginAttempt[];
