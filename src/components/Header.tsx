@@ -1,13 +1,15 @@
 import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Navbar, NavbarBrand, Nav, NavItem, Button } from "reactstrap";
 import { UserContext } from "../contexts/UserContext";
 
 export const Header = (): JSX.Element => {
   const { currentUser, setCurrentUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const handleLogoutClicked = () => {
     setCurrentUser(undefined);
+    navigate("/login");
   };
 
   return (
@@ -15,15 +17,15 @@ export const Header = (): JSX.Element => {
       <Navbar color="black" style={{ height: "10vh" }}>
         <NavbarBrand />
         <Nav>
-          <NavItem style={{ margin: 5 }}>
+          {/* <NavItem style={{ margin: 5 }}>
             <Link to="/get-key">Get key</Link>
-          </NavItem>
+          </NavItem> */}
           <NavItem style={{ margin: 5 }}>
             <Link to="/">Encrypt</Link>
           </NavItem>
-          <NavItem style={{ margin: 5 }}>
+          {/* <NavItem style={{ margin: 5 }}>
             <Link to="/decrypt">Decrypt</Link>
-          </NavItem>
+          </NavItem> */}
           {!currentUser && (
             <NavItem style={{ margin: 5 }}>
               <Link to="/login">Login</Link>
@@ -34,12 +36,12 @@ export const Header = (): JSX.Element => {
               <Link to="/register">Register</Link>
             </NavItem>
           )}
-          {true && (
+          {currentUser && (
             <NavItem style={{ margin: 5 }}>
               <Link to="/send_file">Send File</Link>
             </NavItem>
           )}
-          {true && (
+          {currentUser && (
             <NavItem style={{ margin: 5 }}>
               <Link to="/check_messages">Check Messages</Link>
             </NavItem>

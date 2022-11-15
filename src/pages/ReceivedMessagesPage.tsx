@@ -1,6 +1,11 @@
+import { useContext, useEffect } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { MessageTable } from "../components/MessageTable";
+import { UserContext } from "../contexts/UserContext";
 
 export const ReceivedMessagesPage = () => {
+  const { currentUser } = useContext(UserContext);
+
   return (
     <div
       style={{
@@ -13,7 +18,7 @@ export const ReceivedMessagesPage = () => {
       }}
     >
       <h3>Check and/or download messages</h3>
-      <MessageTable />
+      {currentUser ? <MessageTable /> : <Navigate to={"/login"} />}
     </div>
   );
 };

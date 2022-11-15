@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Button, Input, Spinner } from "reactstrap";
 import { url } from "../config";
 import { user } from "../types";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../contexts/UserContext";
 
 type options = {
   label: string;
@@ -14,14 +16,20 @@ export const SendFileBox: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = useState<string>("1");
   const [file, setFile] = useState<File>();
   const [fileUploading, setFileUploading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const { currentUser } = useContext(UserContext);
 
   useEffect(() => {
-    axios.get(`${url}/api/user`).then((response) => {
-      const options = response.data.map((user: user) => {
-        return { value: "" + user.id, label: user.login };
+    if (!currentUser) {
+      navigate("/login");
+    } else {
+      axios.get(`${url}/api/user`).then((response) => {
+        const options = response.data.map((user: user) => {
+          return { value: "" + user.id, label: user.login };
+        });
+        setOptions(options);
       });
-      setOptions(options);
-    });
+    }
   }, []);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>): void => {

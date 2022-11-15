@@ -4,6 +4,7 @@ import { url } from "../config";
 import { UserContext } from "../contexts/UserContext";
 import { user } from "../types";
 import { checkCompromisedPassword } from "./utils";
+import { useNavigate } from "react-router-dom";
 
 export const RegisterPage = () => {
   const [username, setUsername] = useState<string>("");
@@ -13,8 +14,8 @@ export const RegisterPage = () => {
   const [leakedPassword, setLeakePassword] = useState<boolean>(false);
   const requiredLength = 8;
   const { setCurrentUser, currentUser } = useContext(UserContext);
-
-  console.log(currentUser);
+  const [signingUp, setSigningUp] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (password) {
@@ -26,15 +27,16 @@ export const RegisterPage = () => {
         !/[ `!@#$%^&*()_+\-=\]{};':"\\|,.<>?~]/.test(password);
       setInvalidPassword(invalid);
 
-      // const getData = setTimeout(() => {
-      //   checkCompromisedPassword(password, setLeakePassword);
-      // }, 1500);
+      const getData = setTimeout(() => {
+        checkCompromisedPassword(password, setLeakePassword);
+      }, 1500);
 
-      // return () => clearTimeout(getData);
+      return () => clearTimeout(getData);
     }
   }, [password]);
 
   const handleRegister = () => {
+    setSigningUp(true);
     fetch(`${url}/api/registration`, {
       method: "POST",
       body: JSON.stringify({
@@ -51,10 +53,12 @@ export const RegisterPage = () => {
           .then((response) => response.json())
           .then((result: user) => {
             setCurrentUser(result);
+            navigate("/check_messages");
           })
           .catch((error) => console.log("error", error));
       })
-      .catch((error) => console.log("error", error));
+      .catch((error) => console.log("error", error))
+      .finally(() => setSigningUp(false));
   };
 
   return (
@@ -113,13 +117,14 @@ export const RegisterPage = () => {
         </FormGroup>
         <Button
           onClick={handleRegister}
-          // disabled={
-          //   invalidPassword ||
-          //   password !== confirmPassword ||
-          //   leakedPassword ||
-          //   !password ||
-          //   !username
-          // }
+          disabled={
+            invalidPassword ||
+            password !== confirmPassword ||
+            leakedPassword ||
+            !password ||
+            !username ||
+            signingUp
+          }
         >
           Submit
         </Button>
