@@ -9,24 +9,42 @@ type receivedMessage = {
   login: string;
   filename: string;
   sent_time: string;
+  receiver_id: number;
 };
-
-const mockedMessages = [
-  { id: 1, login: "user1", filename: "file", sent_time: "13.11.2022 0:10" },
-  { id: 2, login: "user2", filename: "subor", sent_time: "12.11.2022 23:36" },
-];
 
 export const MessageTable = () => {
   const [messages, setMessages] = useState<receivedMessage[]>([]);
   const [users, setUsers] = useState<user[]>([]);
   const { currentUser } = useContext(UserContext);
+  const [downloading, setDownloading] = useState<boolean>(false);
 
-  const handleFileDownload = (filename: string) => {
-    //download file
+  const handleFileDownload = (
+    filename: string,
+    sent_time: string,
+    receiver_id: number
+  ) => {
+    setDownloading(true);
+    const sentTime = new Date(sent_time);
+    fetch(`${url}/DOWNLOAD`, {
+      method: "POST",
+      body: JSON.stringify({
+        filename: filename,
+        sent_time: sentTime,
+        receiver_id: receiver_id,
+      }),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((result) => {})
+      .finally(() => {
+        setDownloading(false);
+      });
   };
 
   useEffect(() => {
-    fetch(`${url}/api/users`)
+    fetch(`${url}/api/user`)
       .then((response) => response.json())
       .then((result: user[]) => {
         setUsers(result);
@@ -35,7 +53,7 @@ export const MessageTable = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${url}/messages/${currentUser!.id}`)
+    fetch(`${url}/api/messages/${currentUser!.id}`)
       .then((response) => response.json())
       .then((result: message[]) => {
         const messages: receivedMessage[] = result.map((message) => {
@@ -45,16 +63,16 @@ export const MessageTable = () => {
             login: sender!.login,
             filename: message.filename,
             sent_time: message.sent_time.toString(),
+            receiver_id: message.receiver_id,
           };
         });
         setMessages(messages);
       })
       .catch((error) => console.log("error", error));
-    setMessages(mockedMessages);
   }, [users]);
 
   const onRefresh = () => {
-    fetch(`${url}/JEBNI SEM ENDPOINT`)
+    fetch(`${url}/api/messages/${currentUser!.id}`)
       .then((response) => response.json())
       .then((result: message[]) => {
         const messages: receivedMessage[] = result.map((message) => {
@@ -64,12 +82,12 @@ export const MessageTable = () => {
             login: sender!.login,
             filename: message.filename,
             sent_time: message.sent_time.toString(),
+            receiver_id: message.receiver_id,
           };
         });
         setMessages(messages);
       })
       .catch((error) => console.log("error", error));
-    setMessages(mockedMessages);
   };
 
   return (
@@ -93,7 +111,16 @@ export const MessageTable = () => {
                 <td>{message.sent_time}</td>
                 <td>{message.filename}</td>
                 <td>
-                  <Button onClick={() => handleFileDownload(message.filename)}>
+                  <Button
+                    onClick={() =>
+                      handleFileDownload(
+                        message.filename,
+                        message.sent_time,
+                        message.receiver_id
+                      )
+                    }
+                    disabled={downloading}
+                  >
                     Download
                   </Button>
                 </td>

@@ -1,39 +1,50 @@
 import { useContext } from "react";
-import { Navbar, NavbarBrand, Nav, NavItem, NavLink } from "reactstrap";
+import { Link } from "react-router-dom";
+import { Navbar, NavbarBrand, Nav, NavItem, Button } from "reactstrap";
 import { UserContext } from "../contexts/UserContext";
 
 export const Header = (): JSX.Element => {
-  const { currentUser } = useContext(UserContext);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
+
+  const handleLogoutClicked = () => {
+    setCurrentUser(undefined);
+  };
+
   return (
     <div>
-      <Navbar color="secondary" style={{ height: "10vh" }}>
+      <Navbar color="black" style={{ height: "10vh" }}>
         <NavbarBrand />
         <Nav>
-          <NavItem>
-            <NavLink href="/get-key">Get key</NavLink>
+          <NavItem style={{ margin: 5 }}>
+            <Link to="/get-key">Get key</Link>
           </NavItem>
-          <NavItem>
-            <NavLink href="/">Encrypt</NavLink>
+          <NavItem style={{ margin: 5 }}>
+            <Link to="/">Encrypt</Link>
           </NavItem>
-          <NavItem>
-            <NavLink href="/decrypt">Decrypt</NavLink>
+          <NavItem style={{ margin: 5 }}>
+            <Link to="/decrypt">Decrypt</Link>
           </NavItem>
-          <NavItem>
-            <NavLink href="/login">Login</NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink href="/register">Register</NavLink>
-          </NavItem>
-          {currentUser && (
-            <NavItem>
-              <NavLink href="/send_file">Send File</NavLink>
+          {!currentUser && (
+            <NavItem style={{ margin: 5 }}>
+              <Link to="/login">Login</Link>
             </NavItem>
           )}
-          {currentUser && (
-            <NavItem>
-              <NavLink href="/check_messages">Check Messages</NavLink>
+          {!currentUser && (
+            <NavItem style={{ margin: 5 }}>
+              <Link to="/register">Register</Link>
             </NavItem>
           )}
+          {true && (
+            <NavItem style={{ margin: 5 }}>
+              <Link to="/send_file">Send File</Link>
+            </NavItem>
+          )}
+          {true && (
+            <NavItem style={{ margin: 5 }}>
+              <Link to="/check_messages">Check Messages</Link>
+            </NavItem>
+          )}
+          {currentUser && <Button onClick={handleLogoutClicked}>Logout</Button>}
         </Nav>
       </Navbar>
     </div>

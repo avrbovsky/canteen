@@ -10,7 +10,7 @@ export const LoginPage = () => {
   const { setCurrentUser } = useContext(UserContext);
 
   const handleLogin = () => {
-    fetch(`${url}/login`, {
+    fetch(`${url}/api/login`, {
       method: "POST",
       body: JSON.stringify({
         login: username,

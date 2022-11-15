@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Input, Spinner } from "reactstrap";
 import { url } from "../config";
 import { user } from "../types";
+import axios from "axios";
 
 type options = {
   label: string;
@@ -15,15 +16,12 @@ export const SendFileBox: React.FC = () => {
   const [fileUploading, setFileUploading] = useState<boolean>(false);
 
   useEffect(() => {
-    fetch(`${url}/api/users`)
-      .then((response) => response.json())
-      .then((result: user[]) => {
-        const options = result.map((user) => {
-          return { value: "" + user.id, label: user.login };
-        });
-        setOptions(options);
-      })
-      .catch((error) => console.log("error", error));
+    axios.get(`${url}/api/user`).then((response) => {
+      const options = response.data.map((user: user) => {
+        return { value: "" + user.id, label: user.login };
+      });
+      setOptions(options);
+    });
   }, []);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>): void => {

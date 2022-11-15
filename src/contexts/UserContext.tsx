@@ -7,8 +7,8 @@ type context = {
 };
 
 export const UserContext = createContext<context>({
-  setCurrentUser: () => undefined,
   currentUser: undefined,
+  setCurrentUser: () => {},
 });
 
 type Props = {
@@ -17,7 +17,10 @@ type Props = {
 
 export const UserProvider = ({ children }: Props) => {
   const [currentUser, setCurrentUser] = useState<user | undefined>();
-  const value = { currentUser, setCurrentUser };
 
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  return (
+    <UserContext.Provider value={{ currentUser, setCurrentUser }}>
+      {children}
+    </UserContext.Provider>
+  );
 };

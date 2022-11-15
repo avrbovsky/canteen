@@ -1,7 +1,12 @@
+import { useContext } from "react";
 import { SendFileBox } from "../components/SendFileBox";
+import { UserContext } from "../contexts/UserContext";
 
 const title = "SEND FILE TO A USER";
 export const SendFilePage = () => {
+  const { currentUser } = useContext(UserContext);
+  console.log(currentUser);
+
   return (
     <div
       style={{

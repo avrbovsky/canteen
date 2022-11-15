@@ -1,6 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Input, Button, Form, FormGroup, FormFeedback } from "reactstrap";
 import { url } from "../config";
+import { UserContext } from "../contexts/UserContext";
+import { user } from "../types";
 import { checkCompromisedPassword } from "./utils";
 
 export const RegisterPage = () => {
@@ -10,6 +12,9 @@ export const RegisterPage = () => {
   const [invalidPassword, setInvalidPassword] = useState<boolean>(false);
   const [leakedPassword, setLeakePassword] = useState<boolean>(false);
   const requiredLength = 8;
+  const { setCurrentUser, currentUser } = useContext(UserContext);
+
+  console.log(currentUser);
 
   useEffect(() => {
     if (password) {
@@ -21,27 +26,34 @@ export const RegisterPage = () => {
         !/[ `!@#$%^&*()_+\-=\]{};':"\\|,.<>?~]/.test(password);
       setInvalidPassword(invalid);
 
-      const getData = setTimeout(() => {
-        checkCompromisedPassword(password, setLeakePassword);
-      }, 1500);
+      // const getData = setTimeout(() => {
+      //   checkCompromisedPassword(password, setLeakePassword);
+      // }, 1500);
 
-      return () => clearTimeout(getData);
+      // return () => clearTimeout(getData);
     }
   }, [password]);
 
   const handleRegister = () => {
-    fetch(`${url}/registration`, {
+    fetch(`${url}/api/registration`, {
       method: "POST",
       body: JSON.stringify({
         login: username,
         password: password,
       }),
       headers: {
-        "Content-type": "application/json; charset=UTF-8",
+        "Content-Type": "application/json; charset=UTF-8",
       },
     })
-      .then((response) => response.json())
-      .then((result) => {})
+      .then((response) => response)
+      .then((result) => {
+        fetch(`${url}/api/user/${username}`)
+          .then((response) => response.json())
+          .then((result: user) => {
+            setCurrentUser(result);
+          })
+          .catch((error) => console.log("error", error));
+      })
       .catch((error) => console.log("error", error));
   };
 
@@ -66,7 +78,7 @@ export const RegisterPage = () => {
             onChange={(e) => setUsername(e.currentTarget.value)}
             required
             invalid={username?.length === 0}
-          ></Input>
+          />
           <FormFeedback>Username must not be empty</FormFeedback>
         </FormGroup>
         <FormGroup>
@@ -78,7 +90,7 @@ export const RegisterPage = () => {
             onChange={(e) => setPassword(e.currentTarget.value)}
             required
             invalid={invalidPassword}
-          ></Input>
+          />
           <FormFeedback>
             The password must have at least 8 characters, contain numbers, upper
             and lower case letters and special characters
@@ -96,18 +108,18 @@ export const RegisterPage = () => {
             onChange={(e) => setConfirmPassword(e.currentTarget.value)}
             required
             invalid={confirmPassword !== password}
-          ></Input>
+          />
           <FormFeedback>Passwords must match</FormFeedback>
         </FormGroup>
         <Button
           onClick={handleRegister}
-          disabled={
-            invalidPassword ||
-            password !== confirmPassword ||
-            leakedPassword ||
-            !password ||
-            !username
-          }
+          // disabled={
+          //   invalidPassword ||
+          //   password !== confirmPassword ||
+          //   leakedPassword ||
+          //   !password ||
+          //   !username
+          // }
         >
           Submit
         </Button>
