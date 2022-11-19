@@ -41,12 +41,14 @@ export const SendFileBox: React.FC = () => {
     setFileUploading(true);
     const bodyFormData = new FormData();
     bodyFormData.append("file", file!, file!.name);
+    bodyFormData.append("senderId", "" + currentUser!.id);
+    bodyFormData.append("receiverId", selectedUserId);
     const requestOptions = {
       method: "POST",
       body: bodyFormData,
       mode: "no-cors" as RequestMode,
     };
-    fetch(`${url}/ENDPOINT JEBNI SEM`, requestOptions)
+    fetch(`${url}/api/sendMessage`, requestOptions)
       .then((response) => response.text())
       .then((result) => console.log(result))
       .catch((error) => console.log("error", error))

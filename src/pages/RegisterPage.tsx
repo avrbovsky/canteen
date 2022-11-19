@@ -27,11 +27,11 @@ export const RegisterPage = () => {
         !/[ `!@#$%^&*()_+\-=\]{};':"\\|,.<>?~]/.test(password);
       setInvalidPassword(invalid);
 
-      const getData = setTimeout(() => {
-        checkCompromisedPassword(password, setLeakePassword);
-      }, 1500);
+      // const getData = setTimeout(() => {
+      //   checkCompromisedPassword(password, setLeakePassword);
+      // }, 1500);
 
-      return () => clearTimeout(getData);
+      // return () => clearTimeout(getData);
     }
   }, [password]);
 
@@ -117,14 +117,14 @@ export const RegisterPage = () => {
         </FormGroup>
         <Button
           onClick={handleRegister}
-          disabled={
-            invalidPassword ||
-            password !== confirmPassword ||
-            leakedPassword ||
-            !password ||
-            !username ||
-            signingUp
-          }
+          // disabled={
+          //   invalidPassword ||
+          //   password !== confirmPassword ||
+          //   leakedPassword ||
+          //   !password ||
+          //   !username ||
+          //   signingUp
+          // }
         >
           Submit
         </Button>

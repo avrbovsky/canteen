@@ -18,29 +18,41 @@ export const MessageTable = () => {
   const { currentUser } = useContext(UserContext);
   const [downloading, setDownloading] = useState<boolean>(false);
 
-  const handleFileDownload = (
-    filename: string,
-    sent_time: string,
-    receiver_id: number
-  ) => {
-    setDownloading(true);
-    const sentTime = new Date(sent_time);
-    fetch(`${url}/DOWNLOAD`, {
-      method: "POST",
-      body: JSON.stringify({
-        filename: filename,
-        sent_time: sentTime,
-        receiver_id: receiver_id,
-      }),
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => response.json())
-      .then((result) => {})
-      .finally(() => {
-        setDownloading(false);
-      });
+  // const handleFileDownload = (filename: string) => {
+  //   setDownloading(true);
+  //   fetch(`${url}/api/readMessage`, {
+  //     method: "GET",
+  //     body: JSON.stringify({
+  //       receiverId: currentUser!.id,
+  //       fileName: filename,
+  //     }),
+  //     headers: {
+  //       "Content-type": "application/json; charset=UTF-8",
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((result) => {})
+  //     .finally(() => {
+  //       setDownloading(false);
+  //     });
+  // };
+
+  const handleFileDownload = (fileName: string) => {
+    fetch(
+      `${url}/api/readMessage?receiverId=${
+        currentUser!.id
+      }&fileName=${fileName}`
+    )
+      .then((resp) => resp.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `decrypted_${fileName}`);
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((error) => console.log(error));
   };
 
   useEffect(() => {
@@ -53,22 +65,24 @@ export const MessageTable = () => {
   }, []);
 
   useEffect(() => {
-    fetch(`${url}/api/messages/${currentUser!.id}`)
-      .then((response) => response.json())
-      .then((result: message[]) => {
-        const messages: receivedMessage[] = result.map((message) => {
-          const sender = users.find((user) => user.id === message.sender_id);
-          return {
-            id: message.message_id,
-            login: sender!.login,
-            filename: message.filename,
-            sent_time: message.sent_time.toString(),
-            receiver_id: message.receiver_id,
-          };
-        });
-        setMessages(messages);
-      })
-      .catch((error) => console.log("error", error));
+    if (users.length) {
+      fetch(`${url}/api/messages/${currentUser!.id}`)
+        .then((response) => response.json())
+        .then((result: message[]) => {
+          const messages: receivedMessage[] = result.map((message) => {
+            const sender = users.find((user) => user.id === message.senderId);
+            return {
+              id: message.id,
+              login: sender!.login,
+              filename: message.fileName,
+              sent_time: message.sentTime.toString(),
+              receiver_id: message.receiverId,
+            };
+          });
+          setMessages(messages);
+        })
+        .catch((error) => console.log("error", error));
+    }
   }, [users]);
 
   const onRefresh = () => {
@@ -76,13 +90,13 @@ export const MessageTable = () => {
       .then((response) => response.json())
       .then((result: message[]) => {
         const messages: receivedMessage[] = result.map((message) => {
-          const sender = users.find((user) => user.id === message.sender_id);
+          const sender = users.find((user) => user.id === message.senderId);
           return {
-            id: message.message_id,
+            id: message.id,
             login: sender!.login,
-            filename: message.filename,
-            sent_time: message.sent_time.toString(),
-            receiver_id: message.receiver_id,
+            filename: message.fileName,
+            sent_time: message.sentTime.toString(),
+            receiver_id: message.receiverId,
           };
         });
         setMessages(messages);
@@ -112,13 +126,7 @@ export const MessageTable = () => {
                 <td>{message.filename}</td>
                 <td>
                   <Button
-                    onClick={() =>
-                      handleFileDownload(
-                        message.filename,
-                        message.sent_time,
-                        message.receiver_id
-                      )
-                    }
+                    onClick={() => handleFileDownload(message.filename)}
                     disabled={downloading}
                   >
                     Download

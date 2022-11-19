@@ -1,9 +1,9 @@
 export type message = {
-  message_id: number;
-  filename: string;
-  receiver_id: number;
-  sender_id: number;
-  sent_time: Date;
+  id: number;
+  fileName: string;
+  receiverId: number;
+  senderId: number;
+  sentTime: Date;
 };
 
 export type loginAttempt = {
