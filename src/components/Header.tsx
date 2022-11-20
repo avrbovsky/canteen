@@ -20,9 +20,9 @@ export const Header = (): JSX.Element => {
           {/* <NavItem style={{ margin: 5 }}>
             <Link to="/get-key">Get key</Link>
           </NavItem> */}
-          <NavItem style={{ margin: 5 }}>
+          {/* <NavItem style={{ margin: 5 }}>
             <Link to="/">Encrypt</Link>
-          </NavItem>
+          </NavItem> */}
           {/* <NavItem style={{ margin: 5 }}>
             <Link to="/decrypt">Decrypt</Link>
           </NavItem> */}
