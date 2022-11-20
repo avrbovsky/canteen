@@ -6,13 +6,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
 
-type options = {
+type option = {
   label: string;
   value: string;
 };
 
 export const SendFileBox: React.FC = () => {
-  const [options, setOptions] = useState<options[]>([]);
+  const [options, setOptions] = useState<option[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<string>("1");
   const [file, setFile] = useState<File>();
   const [fileUploading, setFileUploading] = useState<boolean>(false);
@@ -27,7 +27,10 @@ export const SendFileBox: React.FC = () => {
         const options = response.data.map((user: user) => {
           return { value: "" + user.id, label: user.login };
         });
-        setOptions(options);
+        const filteredOptions = options.filter(
+          (user: option) => user.value !== "" + currentUser.id
+        );
+        setOptions(filteredOptions);
       });
     }
   }, []);
