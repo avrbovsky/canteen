@@ -37,3 +37,20 @@ export type FoodProps = {
   ) => void;
   amount?: number;
 };
+
+export type FoodReview = {
+  id: number;
+  reviewerId: number;
+  food_id: number;
+  reviewContent: string;
+  reviewTime: Date;
+};
+
+export type Food = {
+  id: number;
+  name: string;
+  price: number;
+  weight: number;
+  menu_id: number;
+  foodReviews: FoodReview[];
+};

@@ -1,8 +1,9 @@
 import { Button, Table } from "reactstrap";
 import { useContext, useEffect, useState } from "react";
 import { url } from "../config";
-import { message, user } from "../types";
+import { message } from "../types";
 import { UserContext } from "../contexts/UserContext";
+import { useGetUsers } from "../hooks/useGetUsers";
 
 type receivedMessage = {
   id: number;
@@ -14,7 +15,7 @@ type receivedMessage = {
 
 export const MessageTable = () => {
   const [messages, setMessages] = useState<receivedMessage[]>([]);
-  const [users, setUsers] = useState<user[]>([]);
+  const { users } = useGetUsers();
   const { currentUser } = useContext(UserContext);
   const [downloading, setDownloading] = useState<boolean>(false);
 
@@ -54,15 +55,6 @@ export const MessageTable = () => {
       })
       .catch((error) => console.log(error));
   };
-
-  useEffect(() => {
-    fetch(`${url}/api/user`)
-      .then((response) => response.json())
-      .then((result: user[]) => {
-        setUsers(result);
-      })
-      .catch((error) => console.log("error", error));
-  }, []);
 
   useEffect(() => {
     if (users.length) {
