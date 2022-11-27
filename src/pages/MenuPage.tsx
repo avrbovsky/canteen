@@ -6,6 +6,11 @@ import { UserContext } from "../contexts/UserContext";
 import { FoodProps, user } from "../types";
 import { OrderItem } from "../components/OrderItem";
 
+type Food = {
+  id: number;
+  amount: number;
+  price: number;
+};
 
 export const MenuPage = () => {
   let defaultDate = new Date();
@@ -16,25 +21,27 @@ export const MenuPage = () => {
     { id: 0, name: "Meat", price: 10, weight: 1000 },
     { id: 1, name: "French fries", price: 10, weight: 1000 },
   ]);
+  const [addedFoods, setAddedFoods] = useState<Food[]>([]);
   const [total, setTotal] = useState<number>(0);
-  const setTotalPriceOfFood = (id: number, price: number, amountChange: number) => {
-    setMenu((prevState) =>
-      prevState.map((item) =>
-        item.id == id ? { ...item, amount: 0 + amountChange } : item
-      )
+  const setTotalPriceOfFood = (id: number, price: number, amount: number) => {
+    const foods = addedFoods.filter((food) => food.id !== id);
+    const allFoods = [...foods, { id, price, amount }];
+    setAddedFoods(allFoods);
+    const totalCost = allFoods.reduce(
+      (accumulator, food) => accumulator + food.amount * food.price,
+      0
     );
-    setTotal((prevState) => (price*amountChange) +prevState )
+    setTotal(totalCost);
   };
 
   const pay = (): void => {
-    if (credit< total){
-      alert('Not enough money')
+    if (credit < total) {
+      alert("Not enough money");
+    } else {
+      setCredit((prevState) => prevState - total);
+      setTotal(0);
     }
-    else{
-      setCredit((prevState)=> (prevState-total))
-      setTotal(0)
-    }
-  }
+  };
 
   const fetchMenu = () => {
     fetch(`${url}/api/menu`, {
@@ -70,24 +77,21 @@ export const MenuPage = () => {
         type="date"
         name="username"
         placeholder="Enter Username"
-        defaultValue={date.toISOString().split('T')[0]}
+        defaultValue={date.toISOString().split("T")[0]}
         onChange={(e) => setDate(new Date(e.currentTarget.value))}
         required
       ></Input>
       <Table>
-      <tr>
-        <th>Name</th>
-        <th>Price</th>
-        <th>Weight</th>
-        <th>Amount</th>
-        <th>Total</th>
-      </tr>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Weight</th>
+          <th>Amount</th>
+          <th>Total</th>
+        </tr>
         {menu &&
           menu.map(({ ...props }) => (
-            <OrderItem
-              {...props}
-              setTotalPriceOfFood={setTotalPriceOfFood}
-            />
+            <OrderItem {...props} setTotalPriceOfFood={setTotalPriceOfFood} />
           ))}
       </Table>
       <h5>Total of order: {total} €</h5>

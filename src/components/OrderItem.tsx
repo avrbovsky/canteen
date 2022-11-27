@@ -5,11 +5,11 @@ import { Input, Button } from "reactstrap";
 export const OrderItem: FC<FoodProps> = (props) => {
   const { id, name, price, weight, setTotalPriceOfFood } = props;
   const [amount, setAmount] = useState<number>(0);
-  const changeAmount = (num: number) => {
-    if (num == -1 && amount == 0) {
-    } else {
-      setAmount((prevState) => prevState + num);
-      setTotalPriceOfFood?.(id, price, num);
+  const changeAmount = (num: string) => {
+    const amount = +num;
+    if (amount >= 0) {
+      setAmount(amount);
+      setTotalPriceOfFood?.(id, price, amount);
     }
   };
 
@@ -20,21 +20,11 @@ export const OrderItem: FC<FoodProps> = (props) => {
         <td>{price}</td>
         <td>{weight}</td>
         <td>
-          <Button
-            onClick={(e) => {
-              changeAmount(1);
-            }}
-          >
-            +
-          </Button>
-          {amount}
-          <Button
-            onClick={(e) => {
-              changeAmount(-1);
-            }}
-          >
-            -
-          </Button>
+          <Input
+            onChange={(e) => changeAmount(e.currentTarget.value)}
+            value={amount}
+            type="number"
+          />
         </td>
         <td>{price * amount} €</td>
       </tr>
