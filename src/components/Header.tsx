@@ -61,6 +61,11 @@ export const Header = (): JSX.Element => {
               <Link to="/comments">Commets</Link>
             </NavItem>
           )}
+          {currentUser && (
+            <NavItem style={{ margin: 5 }}>
+              <Link to="/addFood">Commets</Link>
+            </NavItem>
+          )}
           {currentUser && <Button onClick={handleLogoutClicked}>Logout</Button>}
         </Nav>
       </Navbar>
