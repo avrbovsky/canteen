@@ -7,6 +7,9 @@ import { LoginPage } from "./pages/LoginPage";
 import { ReceivedMessagesPage } from "./pages/ReceivedMessagesPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { SendFilePage } from "./pages/SendFilePage";
+import { MenuPage } from "./pages/MenuPage";
+import { FoodsPage } from "./pages/FoodsPage";
+import { CommentsPage } from "./pages/CommentsPage";
 
 export const Routes = () => {
   return (
@@ -19,6 +22,9 @@ export const Routes = () => {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/send_file" element={<SendFilePage />} />
       <Route path="/check_messages" element={<ReceivedMessagesPage />} />
+      <Route path="/menu" element={<MenuPage />} />
+      <Route path="/foods" element={<FoodsPage />} />
+      <Route path="/commets" element={<CommentsPage />} />
     </RouterRoutes>
   );
 };

@@ -23,3 +23,14 @@ export type user = {
   sentMessages: message[];
   userLoginAttempts: loginAttempt[];
 };
+
+export type FoodProps = {
+  id: number
+  name: string,
+  price: number,
+  weight: number,
+  priceOfOrderedFood?: number,
+  setTotalPriceOfFood?: (id: number, price: number, amountChange: number) => void,
+  clearState?: () => void,
+  amount?: number,
+}

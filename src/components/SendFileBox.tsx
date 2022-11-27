@@ -21,7 +21,7 @@ export const SendFileBox: React.FC = () => {
 
   useEffect(() => {
     if (!currentUser) {
-      navigate("/login");
+      //navigate("/login");
     } else {
       axios.get(`${url}/api/user`).then((response) => {
         const options = response.data.map((user: user) => {

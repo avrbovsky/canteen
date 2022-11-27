@@ -19,7 +19,7 @@ export const SendFilePage = () => {
       }}
     >
       <h3>{title}</h3>
-      {currentUser ? <SendFileBox /> : <Navigate to={"/login"} />}
+      {currentUser ? <SendFileBox /> : <></>/*<Navigate to={"/login"} />*/}
     </div>
   );
 };

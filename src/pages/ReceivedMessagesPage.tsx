@@ -18,7 +18,7 @@ export const ReceivedMessagesPage = () => {
       }}
     >
       <h3>Check and/or download messages</h3>
-      {currentUser ? <MessageTable /> : <Navigate to={"/login"} />}
+      {currentUser ? <MessageTable /> : <></>/*<Navigate to={"/login"} />*/}
     </div>
   );
 };
