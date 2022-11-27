@@ -13,7 +13,7 @@ type Food = {
 };
 
 export const MenuPage = () => {
-  let defaultDate = new Date();
+  const defaultDate = new Date();
   defaultDate.setDate(defaultDate.getDate() + 1);
   const [date, setDate] = useState<Date>(defaultDate);
   const [credit, setCredit] = useState<number>(10);
