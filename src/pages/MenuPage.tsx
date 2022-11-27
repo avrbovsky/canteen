@@ -1,8 +1,6 @@
-import { useContext, useState } from "react";
-import { Input, Button, Table, Alert } from "reactstrap";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Input, Button, Table } from "reactstrap";
 import { url } from "../config";
-import { UserContext } from "../contexts/UserContext";
 import { FoodProps, user } from "../types";
 import { OrderItem } from "../components/OrderItem";
 
