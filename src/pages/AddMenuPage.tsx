@@ -20,7 +20,7 @@ const formReducer = (state: any, event: any) => {
   };
 };
 
-export const AddMenu = () => {
+export const AddMenuPage = () => {
   const defaultDate = new Date();
   defaultDate.setDate(defaultDate.getDate() + 1);
   const [date, setDate] = useState<Date>(defaultDate);
