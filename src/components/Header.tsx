@@ -61,6 +61,23 @@ export const Header = (): JSX.Element => {
               <Link to="/comments">Commets</Link>
             </NavItem>
           )}
+
+          {
+            /// check isManager to do
+            currentUser && (
+              <NavItem style={{ margin: 5 }}>
+                <Link to="/addFood">Add Food</Link>
+              </NavItem>
+            )
+          }
+          {
+            /// check isManager to do
+            currentUser && (
+              <NavItem style={{ margin: 5 }}>
+                <Link to="/addMenu">Add Menu</Link>
+              </NavItem>
+            )
+          }
           {currentUser && <Button onClick={handleLogoutClicked}>Logout</Button>}
         </Nav>
       </Navbar>
