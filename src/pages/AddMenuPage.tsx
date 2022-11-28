@@ -2,7 +2,7 @@ import React, { useReducer, useState } from "react";
 import { Button, Form, Input, Table } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import { url } from "../config";
-import { FoodProps } from "../types";
+import { FoodProps, option } from "../types";
 import { Food } from "../components/Food";
 import { useGetFoodList } from "../hooks/useGetFoodList";
 import { components } from "react-select";
@@ -79,20 +79,8 @@ export const AddMenuPage = () => {
   };
 
   const [name, setName] = useState("");
-  //const { foods } = useGetFoodList();
-  //const [foodsOption, setFoodsOption] = useState(foods.map(({ id, name }) => ({ value: id, label: name }))
-  const [foodsOption, setFoodsOption] = useState(
-    [
-      { id: 0, name: "Meat", price: 10, weight: 1000 },
-      { id: 1, name: "French fries", price: 10, weight: 1000 },
-    ].map(({ id, name }) => ({ value: id, label: name }))
-  );
-
-  type option = {
-    value: number;
-    label: string;
-  };
-
+  const { foods } = useGetFoodList();
+  const [foodsOption, setFoodsOption] = useState(foods.map(({ id, name }) => ({ value: id, label: name })))
   const [optionSelected, setOptionSelected] = useState<option[]>();
 
   const handleChange = (selected: any) => {

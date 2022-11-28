@@ -2,7 +2,7 @@ import React, { useReducer, useState } from "react";
 import { Button, Form, Input, Table } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import { url } from "../config";
-import { FoodProps } from "../types";
+import { FoodProps, option } from "../types";
 import { Food } from "../components/Food";
 import { useGetFoodList } from "../hooks/useGetFoodList";
 import { components } from "react-select";
@@ -58,7 +58,6 @@ export const AddCreditPage = () => {
     const keys: number[] = [];
     optionSelected?.forEach(({ value }) => keys.push(value));
 
-
     fetch(`${url}/api/addCredit`, {
       method: "POST",
       body: JSON.stringify({
@@ -73,13 +72,10 @@ export const AddCreditPage = () => {
 
   const [name, setName] = useState("");
   const { users } = useGetUsers();
-  //const [usersOption, setUsersOption] = useState( users.map(({ id, login }) => ({ value: id, label: login }))
-  const [usersOption, setUsersOption] = useState([{ id: 0, login: "Daniel" },{ id: 1, login: "Roman" },].map(({ id, login }) => ({ value: id, label: login })));
-
-  type option = {
-    value: number;
-    label: string;
-  };
+  const [usersOption, setUsersOption] = useState(
+    users.map(({ id, login }) => ({ value: id, label: login }))
+  );
+  //const [usersOption, setUsersOption] = useState([{ id: 0, login: "Daniel" },{ id: 1, login: "Roman" },].map(({ id, login }) => ({ value: id, label: login })));
 
   const [optionSelected, setOptionSelected] = useState<option[]>();
 

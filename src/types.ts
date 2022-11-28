@@ -54,3 +54,8 @@ export type Food = {
   menu_id: number;
   foodReviews: FoodReview[];
 };
+
+export type option = {
+  value: number;
+  label: string;
+};
