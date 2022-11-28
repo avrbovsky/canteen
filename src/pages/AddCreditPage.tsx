@@ -7,6 +7,7 @@ import { Food } from "../components/Food";
 import { useGetFoodList } from "../hooks/useGetFoodList";
 import { components } from "react-select";
 import { default as ReactSelect } from "react-select";
+import { useGetUsers } from "../hooks/useGetUsers";
 
 const Option = (props: any) => {
   return (
@@ -37,7 +38,7 @@ const formReducer = (state: any, event: any) => {
   };
 };
 
-export const AddMenuPage = () => {
+export const AddCreditPage = () => {
   const defaultDate = new Date();
   defaultDate.setDate(defaultDate.getDate() + 1);
   const [date, setDate] = useState<Date>(defaultDate);
@@ -48,28 +49,20 @@ export const AddMenuPage = () => {
     setSubmitting(true);
 
     setTimeout(() => {
-      handleAddMenu();
+      handleAddCredit();
       setSubmitting(false);
     }, 1000);
   };
 
-  const handleAddMenu = () => {
+  const handleAddCredit = () => {
     const keys: number[] = [];
     optionSelected?.forEach(({ value }) => keys.push(value));
-    console.log(JSON.stringify({
-      date:
-        formData.date == undefined
-          ? date.toISOString().split("T")[0]
-          : formData.date,
-      id: keys,
-    }),)
-    fetch(`${url}/api/menuCreate`, {
+
+
+    fetch(`${url}/api/addCredit`, {
       method: "POST",
       body: JSON.stringify({
-        date:
-          formData.date == undefined
-            ? date.toISOString().split("T")[0]
-            : formData.date,
+        credit: formData.credit,
         id: keys,
       }),
       headers: {
@@ -79,14 +72,9 @@ export const AddMenuPage = () => {
   };
 
   const [name, setName] = useState("");
-  //const { foods } = useGetFoodList();
-  //const [foodsOption, setFoodsOption] = useState(foods.map(({ id, name }) => ({ value: id, label: name }))
-  const [foodsOption, setFoodsOption] = useState(
-    [
-      { id: 0, name: "Meat", price: 10, weight: 1000 },
-      { id: 1, name: "French fries", price: 10, weight: 1000 },
-    ].map(({ id, name }) => ({ value: id, label: name }))
-  );
+  const { users } = useGetUsers();
+  //const [usersOption, setUsersOption] = useState( users.map(({ id, login }) => ({ value: id, label: login }))
+  const [usersOption, setUsersOption] = useState([{ id: 0, login: "Daniel" },{ id: 1, login: "Roman" },].map(({ id, login }) => ({ value: id, label: login })));
 
   type option = {
     value: number;
@@ -109,7 +97,7 @@ export const AddMenuPage = () => {
         padding: "20px",
       }}
     >
-      <h1>Add Menu</h1>
+      <h1>Add Credit</h1>
       {submitting && <div>Submtting Form...</div>}
       <Form
         onSubmit={(e) => {
@@ -117,10 +105,12 @@ export const AddMenuPage = () => {
         }}
       >
         <Input
-          type="date"
-          name="date"
-          defaultValue={date.toISOString().split("T")[0]}
+          type="number"
+          name="credit"
           onChange={setFormData}
+          placeholder="Price"
+          step="0.01"
+          min="0"
           required
           disabled={submitting}
         ></Input>
@@ -128,16 +118,16 @@ export const AddMenuPage = () => {
         <span
           data-toggle="popover"
           data-trigger="focus"
-          data-content="Please select"
+          data-content="Please selecet"
         >
           <ReactSelect
             isDisabled={submitting}
             required
-            options={foodsOption}
-            placeholder="Add Food"
+            options={usersOption}
             isMulti
             closeMenuOnSelect={false}
             hideSelectedOptions={false}
+            placeholder="Add Users"
             components={{
               Option,
             }}

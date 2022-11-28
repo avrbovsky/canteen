@@ -78,6 +78,14 @@ export const Header = (): JSX.Element => {
               </NavItem>
             )
           }
+          {
+            /// check isManager to do
+            currentUser && (
+              <NavItem style={{ margin: 5 }}>
+                <Link to="/addCredit">Add Credit</Link>
+              </NavItem>
+            )
+          }
           {currentUser && <Button onClick={handleLogoutClicked}>Logout</Button>}
         </Nav>
       </Navbar>

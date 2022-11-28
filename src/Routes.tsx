@@ -12,6 +12,7 @@ import { FoodsPage } from "./pages/FoodsPage";
 import { CommentsPage } from "./pages/CommentsPage";
 import { AddMenuPage } from "./pages/AddMenuPage";
 import { AddFoodPage } from "./pages/AddFoodPage";
+import { AddCreditPage } from "./pages/AddCreditPage";
 
 export const Routes = () => {
   return (
@@ -29,6 +30,7 @@ export const Routes = () => {
       <Route path="/commets" element={<CommentsPage />} />
       <Route path="/addFood" element={<AddFoodPage/>}/>
       <Route path="/addMenu" element={<AddMenuPage />} />
+      <Route path="/addCredit" element={<AddCreditPage />} />
     </RouterRoutes>
   );
 };
