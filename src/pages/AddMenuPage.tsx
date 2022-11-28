@@ -5,6 +5,23 @@ import { url } from "../config";
 import { FoodProps } from "../types";
 import { Food } from "../components/Food";
 import { useGetFoodList } from "../hooks/useGetFoodList";
+import { components } from "react-select";
+import { default as ReactSelect } from "react-select";
+
+const Option = (props: any) => {
+  return (
+    <div>
+      <components.Option {...props}>
+        <input
+          type="checkbox"
+          checked={props.isSelected}
+          onChange={() => null}
+        />{" "}
+        <label>{props.label}</label>
+      </components.Option>
+    </div>
+  );
+};
 
 const formReducer = (state: any, event: any) => {
   if (event.reset) {
@@ -37,9 +54,17 @@ export const AddMenuPage = () => {
   };
 
   const handleAddMenu = () => {
-    fetch(`${url}/api/foodCreate`, {
+    const keys: number[] = [];
+    optionSelected?.forEach(({ value }) => keys.push(value));
+    fetch(`${url}/api/menuCreate`, {
       method: "POST",
-      body: JSON.stringify(formData),
+      body: JSON.stringify({
+        date:
+          formData.date == undefined
+            ? date.toISOString().split("T")[0]
+            : formData.date,
+        id: keys,
+      }),
       headers: {
         "Content-Type": "application/json; charset=UTF-8",
       },
@@ -48,24 +73,22 @@ export const AddMenuPage = () => {
 
   const [name, setName] = useState("");
   //const { foods } = useGetFoodList();
-  const [foodsFiltered, setFoodsFiltered] = useState([
-    { id: 0, name: "Meat", price: 10, weight: 1000 },
-    { id: 1, name: "French fries", price: 10, weight: 1000 },
-  ]);
-  const navigate = useNavigate();
+  const [foods, setFoods] = useState(
+    [
+      { id: 0, name: "Meat", price: 10, weight: 1000 },
+      { id: 1, name: "French fries", price: 10, weight: 1000 },
+    ].map(({ id, name }) => ({ value: id, label: name }))
+  );
 
-  const filter = (keyword: string): void => {
-    if (keyword !== "") {
-      const results = foodsFiltered.filter((food) => {
-        return food.name.toLowerCase().startsWith(keyword.toLowerCase());
-      });
-      setFoodsFiltered(results);
-    } else {
-      setFoodsFiltered(foodsFiltered);
-      // If the text field is empty, show all foods
-    }
+  type option = {
+    value: number;
+    label: string;
+  };
 
-    setName(keyword);
+  const [optionSelected, setOptionSelected] = useState<option[]>();
+
+  const handleChange = (selected: any) => {
+    setOptionSelected(selected);
   };
 
   return (
@@ -87,37 +110,35 @@ export const AddMenuPage = () => {
       >
         <Input
           type="date"
-          name="username"
+          name="date"
           defaultValue={date.toISOString().split("T")[0]}
-          onChange={(e) => setDate(new Date(e.currentTarget.value))}
+          onChange={setFormData}
           required
+          disabled={submitting}
         ></Input>
 
-        <Input
-          type="search"
-          value={name}
-          onChange={(e) => {
-            filter(e.target.value);
-          }}
-          placeholder="Filter"
-        ></Input>
-        <Table>
-          {foodsFiltered && foodsFiltered.length > 0 ? (
-            foodsFiltered.map(({ id, name, price, weight }) => (<>
-              <Food id={id} name={name} price={price} weight={weight} />         <Input
-              type="checkbox"
-              name="topping"
-              value="Paneer"
-              //checked={isChecked}
-              //onChange={handleOnChange}
-            />
-            </>
-            ))
-          ) : (
-            <h1>No results found!</h1>
-          )}
-        </Table>
-        <Button type="submit" disabled={submitting}>
+        <span
+          data-toggle="popover"
+          data-trigger="focus"
+          data-content="Please selecet"
+        >
+          <ReactSelect
+            isDisabled={submitting}
+            required
+            options={foods}
+            isMulti
+            closeMenuOnSelect={false}
+            hideSelectedOptions={false}
+            components={{
+              Option,
+            }}
+            onChange={handleChange}
+            //allowSelectAll={true}
+            value={optionSelected}
+          />
+        </span>
+
+        <Button type="submit" disabled={submitting} onC>
           Submit
         </Button>
       </Form>
