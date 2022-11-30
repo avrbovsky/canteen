@@ -4,7 +4,7 @@ import { FoodComment } from "../components/FoodComment";
 import { url } from "../config";
 import { Food, FoodReview } from "../types";
 import { AiFillPlusCircle } from "react-icons/ai";
-import { Button, Col, Input, Row } from "reactstrap";
+import { Button, Col, Input, Row, Table } from "reactstrap";
 import { UserContext } from "../contexts/UserContext";
 import { useGetUsers } from "../hooks/useGetUsers";
 import { useGetFoodList } from "../hooks/useGetFoodList";
@@ -84,12 +84,29 @@ export const FoodCommentsPage = () => {
         padding: "20px",
       }}
     >
-      <h3>Food "{food?.name}" comments</h3>
+      <h3>"{food?.name}" detail</h3>
+      <Table style={{ backgroundColor: "lightgray" }}>
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Weight</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td># {food.id}</td>
+            <td>{food.weight} g</td>
+            <td>{food.price} €</td>
+          </tr>
+        </tbody>
+      </Table>
+      <h3>Comments</h3>
       {!food?.foodReviews.length && <span>THERE ARE NO COMMENTS YET</span>}
       {food?.foodReviews.map((review) => {
         return <FoodComment review={review} users={users} key={review.id} />;
       })}
-      <h4>Add comment</h4>
+      <h5>Add comment</h5>
       <Row>
         <Col xs="11">
           <Input

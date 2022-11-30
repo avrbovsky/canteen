@@ -5,7 +5,6 @@ import { RegisterPage } from "./pages/RegisterPage";
 import { SendFilePage } from "./pages/SendFilePage";
 import { MenuPage } from "./pages/MenuPage";
 import { FoodsPage } from "./pages/FoodsPage";
-import { CommentsPage } from "./pages/CommentsPage";
 import { FoodCommentsPage } from "./pages/FoodCommentsPage";
 
 export const Routes = () => {
@@ -18,8 +17,7 @@ export const Routes = () => {
       <Route path="/check_messages" element={<ReceivedMessagesPage />} />
       <Route path="/menu" element={<MenuPage />} />
       <Route path="/foods" element={<FoodsPage />} />
-      <Route path="/comments" element={<CommentsPage />} />
-      <Route path="comments/:id" element={<FoodCommentsPage />} />
+      <Route path="detail/:id" element={<FoodCommentsPage />} />
     </RouterRoutes>
   );
 };
