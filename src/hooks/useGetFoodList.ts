@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { url } from "../config";
-import { Food, user } from "../types";
+import { Food } from "../types";
 
 export const useGetFoodList = () => {
-  const [foods, setFoods] = useState<Food[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [foods, setFoods] = useState<Food[]>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState();
 
   useEffect(() => {
@@ -14,7 +14,7 @@ export const useGetFoodList = () => {
         setFoods(result);
       })
       .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   }, []);
-  return { foods, loading, error };
+  return { foods, isLoading, error };
 };

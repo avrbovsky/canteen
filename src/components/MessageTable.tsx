@@ -57,7 +57,7 @@ export const MessageTable = () => {
   };
 
   useEffect(() => {
-    if (users.length) {
+    if (users?.length) {
       fetch(`${url}/api/messages/${currentUser!.id}`)
         .then((response) => response.json())
         .then((result: message[]) => {
@@ -82,7 +82,7 @@ export const MessageTable = () => {
       .then((response) => response.json())
       .then((result: message[]) => {
         const messages: receivedMessage[] = result.map((message) => {
-          const sender = users.find((user) => user.id === message.senderId);
+          const sender = users?.find((user) => user.id === message.senderId);
           return {
             id: message.id,
             login: sender!.login,

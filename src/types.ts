@@ -24,20 +24,6 @@ export type user = {
   userLoginAttempts: loginAttempt[];
 };
 
-export type FoodProps = {
-  id: number;
-  name: string;
-  price: number;
-  weight: number;
-  priceOfOrderedFood?: number;
-  setTotalPriceOfFood?: (
-    id: number,
-    price: number,
-    amountChange: number
-  ) => void;
-  amount?: number;
-};
-
 export type FoodReview = {
   id: number;
   reviewerId: number;
@@ -54,6 +40,16 @@ export type Food = {
   menu_id: number;
   foodReviews: FoodReview[];
 };
+
+export type FoodProps = {
+  priceOfOrderedFood?: number;
+  setTotalPriceOfFood?: (
+    id: number,
+    price: number,
+    amountChange: number
+  ) => void;
+  amount?: number;
+} & Omit<Food, "menu_id" | "foodReviews">;
 
 export type option = {
   value: number;

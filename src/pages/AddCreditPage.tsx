@@ -1,10 +1,7 @@
-import React, { useReducer, useState } from "react";
-import { Button, Form, Input, Table } from "reactstrap";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useReducer, useState } from "react";
+import { Button, Form, Input } from "reactstrap";
 import { url } from "../config";
-import { FoodProps, option } from "../types";
-import { Food } from "../components/Food";
-import { useGetFoodList } from "../hooks/useGetFoodList";
+import { option } from "../types";
 import { components } from "react-select";
 import { default as ReactSelect } from "react-select";
 import { useGetUsers } from "../hooks/useGetUsers";
@@ -41,7 +38,6 @@ const formReducer = (state: any, event: any) => {
 export const AddCreditPage = () => {
   const defaultDate = new Date();
   defaultDate.setDate(defaultDate.getDate() + 1);
-  const [date, setDate] = useState<Date>(defaultDate);
   const [formData, setFormData] = useReducer(formReducer, {});
   const [submitting, setSubmitting] = useState(false);
   const handleSubmit = (event: any) => {
@@ -69,13 +65,18 @@ export const AddCreditPage = () => {
       },
     }).catch((error) => console.log("error", error));
   };
-
-  const [name, setName] = useState("");
   const { users } = useGetUsers();
-  const [usersOption, setUsersOption] = useState(
-    users.map(({ id, login }) => ({ value: id, label: login }))
-  );
-  //const [usersOption, setUsersOption] = useState([{ id: 0, login: "Daniel" },{ id: 1, login: "Roman" },].map(({ id, login }) => ({ value: id, label: login })));
+  const [usersOption, setUsersOption] = useState<option[]>();
+
+  useEffect(() => {
+    if (users) {
+      const options = users.map(({ id, login }) => ({
+        value: id,
+        label: login,
+      }));
+      setUsersOption(options);
+    }
+  }, [users]);
 
   const [optionSelected, setOptionSelected] = useState<option[]>();
 

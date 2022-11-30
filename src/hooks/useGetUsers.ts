@@ -3,8 +3,8 @@ import { url } from "../config";
 import { user } from "../types";
 
 export const useGetUsers = () => {
-  const [users, setUsers] = useState<user[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [users, setUsers] = useState<user[]>();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState();
 
   useEffect(() => {
@@ -14,8 +14,8 @@ export const useGetUsers = () => {
         setUsers(result);
       })
       .catch((error) => setError(error))
-      .finally(() => setLoading(false));
+      .finally(() => setIsLoading(false));
   }, []);
 
-  return { users, loading, error };
+  return { users, isLoading, error };
 };

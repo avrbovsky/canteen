@@ -1,14 +1,16 @@
-import { useContext, useEffect, useState, FC } from "react";
-import { FoodProps } from "../types";
-import { Input, Button } from "reactstrap";
+import { FC } from "react";
+import { Button } from "reactstrap";
+import { useNavigate } from "react-router-dom";
 
-export const Food: FC<{
+type Props = {
   id: number;
   name: string;
   price: number;
   weight: number;
-}> = (props) => {
-  const { id, name, price, weight } = props;
+};
+
+export const Food: FC<Props> = ({ id, name, price, weight }: Props) => {
+  const navigate = useNavigate();
 
   return (
     <>
@@ -23,7 +25,7 @@ export const Food: FC<{
         <td>{price}</td>
         <td>{weight}</td>
         <td>
-          <Button>Comment</Button>
+          <Button onClick={() => navigate(`/detail/${id}`)}>Comment</Button>
         </td>
       </tr>
     </>
