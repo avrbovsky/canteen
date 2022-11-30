@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { url } from "../config";
-import { Food } from "../types";
+import { Food, user } from "../types";
 
 export const useGetFoodList = () => {
   const [foods, setFoods] = useState<Food[]>();

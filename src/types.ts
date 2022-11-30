@@ -50,3 +50,8 @@ export type FoodProps = {
   ) => void;
   amount?: number;
 } & Omit<Food, "menu_id" | "foodReviews">;
+
+export type option = {
+  value: number;
+  label: string;
+};

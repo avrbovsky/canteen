@@ -6,6 +6,9 @@ import { SendFilePage } from "./pages/SendFilePage";
 import { MenuPage } from "./pages/MenuPage";
 import { FoodsPage } from "./pages/FoodsPage";
 import { FoodCommentsPage } from "./pages/FoodCommentsPage";
+import { AddMenuPage } from "./pages/AddMenuPage";
+import { AddFoodPage } from "./pages/AddFoodPage";
+import { AddCreditPage } from "./pages/AddCreditPage";
 
 export const Routes = () => {
   return (
@@ -18,6 +21,9 @@ export const Routes = () => {
       <Route path="/menu" element={<MenuPage />} />
       <Route path="/foods" element={<FoodsPage />} />
       <Route path="detail/:id" element={<FoodCommentsPage />} />
+      <Route path="/addFood" element={<AddFoodPage />} />
+      <Route path="/addMenu" element={<AddMenuPage />} />
+      <Route path="/addCredit" element={<AddCreditPage />} />
     </RouterRoutes>
   );
 };
