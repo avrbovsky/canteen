@@ -1,12 +1,10 @@
-import React, { useReducer, useState } from "react";
-import { Button, Form, Input, Table } from "reactstrap";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useReducer, useState } from "react";
+import { Button, Form, Input } from "reactstrap";
 import { url } from "../config";
-import { FoodProps, option } from "../types";
-import { Food } from "../components/Food";
 import { useGetFoodList } from "../hooks/useGetFoodList";
 import { components } from "react-select";
 import { default as ReactSelect } from "react-select";
+import { option } from "../types";
 
 const Option = (props: any) => {
   return (
@@ -40,13 +38,15 @@ const formReducer = (state: any, event: any) => {
 export const AddMenuPage = () => {
   const defaultDate = new Date();
   defaultDate.setDate(defaultDate.getDate() + 1);
-  const [date, setDate] = useState<Date>(defaultDate);
   const [formData, setFormData] = useReducer(formReducer, {});
   const [submitting, setSubmitting] = useState(false);
+  const { foods } = useGetFoodList();
+  const [foodsOption, setFoodsOption] = useState<option[]>();
+  const [optionSelected, setOptionSelected] = useState<option[]>();
+
   const handleSubmit = (event: any) => {
     event.preventDefault();
     setSubmitting(true);
-
     setTimeout(() => {
       handleAddMenu();
       setSubmitting(false);
@@ -56,19 +56,21 @@ export const AddMenuPage = () => {
   const handleAddMenu = () => {
     const keys: number[] = [];
     optionSelected?.forEach(({ value }) => keys.push(value));
-    console.log(JSON.stringify({
-      date:
-        formData.date == undefined
-          ? date.toISOString().split("T")[0]
-          : formData.date,
-      id: keys,
-    }),)
+    console.log(
+      JSON.stringify({
+        date:
+          formData.date === undefined
+            ? defaultDate.toISOString().split("T")[0]
+            : formData.date,
+        id: keys,
+      })
+    );
     fetch(`${url}/api/menuCreate`, {
       method: "POST",
       body: JSON.stringify({
         date:
-          formData.date == undefined
-            ? date.toISOString().split("T")[0]
+          formData.date === undefined
+            ? defaultDate.toISOString().split("T")[0]
             : formData.date,
         id: keys,
       }),
@@ -78,10 +80,15 @@ export const AddMenuPage = () => {
     }).catch((error) => console.log("error", error));
   };
 
-  const [name, setName] = useState("");
-  const { foods } = useGetFoodList();
-  const [foodsOption, setFoodsOption] = useState(foods.map(({ id, name }) => ({ value: id, label: name })))
-  const [optionSelected, setOptionSelected] = useState<option[]>();
+  useEffect(() => {
+    if (foods) {
+      const foodOptions = foods.map(({ id, name }) => ({
+        value: id,
+        label: name,
+      }));
+      setFoodsOption(foodOptions);
+    }
+  }, [foods]);
 
   const handleChange = (selected: any) => {
     setOptionSelected(selected);
@@ -107,7 +114,7 @@ export const AddMenuPage = () => {
         <Input
           type="date"
           name="date"
-          defaultValue={date.toISOString().split("T")[0]}
+          defaultValue={defaultDate.toISOString().split("T")[0]}
           onChange={setFormData}
           required
           disabled={submitting}
@@ -130,7 +137,6 @@ export const AddMenuPage = () => {
               Option,
             }}
             onChange={handleChange}
-            //allowSelectAll={true}
             value={optionSelected}
           />
         </span>
