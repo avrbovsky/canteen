@@ -11,21 +11,21 @@ import { useGetFoodList } from "../hooks/useGetFoodList";
 
 const reviews: FoodReview[] = [
   {
-    id: 1,
+    reviewId: 1,
     food_id: 1,
     reviewContent: "Mnam dopici",
     reviewerId: 1,
     reviewTime: new Date(),
   },
   {
-    id: 2,
+    reviewId: 2,
     food_id: 1,
     reviewContent: "Tyy kokot",
     reviewerId: 2,
     reviewTime: new Date(),
   },
   {
-    id: 3,
+    reviewId: 3,
     food_id: 1,
     reviewContent: "Fuj",
     reviewerId: 1,
@@ -104,7 +104,7 @@ export const FoodCommentsPage = () => {
       <h3>Comments</h3>
       {!food?.foodReviews.length && <span>THERE ARE NO COMMENTS YET</span>}
       {food?.foodReviews.map((review) => {
-        return <FoodComment review={review} users={users} key={review.id} />;
+        return <FoodComment review={review} users={users} key={review.reviewId} />;
       })}
       <h5>Add comment</h5>
       <Row>

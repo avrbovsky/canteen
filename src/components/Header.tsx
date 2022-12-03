@@ -63,24 +63,21 @@ export const Header = (): JSX.Element => {
           )}
 
           {
-            /// check isManager to do
-            currentUser && (
+            currentUser?.isManager && (
               <NavItem style={{ margin: 5 }}>
                 <Link to="/addFood">Add Food</Link>
               </NavItem>
             )
           }
           {
-            /// check isManager to do
-            currentUser && (
+            currentUser?.isManager && (
               <NavItem style={{ margin: 5 }}>
                 <Link to="/addMenu">Add Menu</Link>
               </NavItem>
             )
           }
           {
-            /// check isManager to do
-            currentUser && (
+            currentUser?.isManager && (
               <NavItem style={{ margin: 5 }}>
                 <Link to="/addCredit">Add Credit</Link>
               </NavItem>

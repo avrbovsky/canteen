@@ -14,9 +14,11 @@ export type loginAttempt = {
 
 export type user = {
   id: number;
+  isManager: boolean;
   login: string;
   password: string;
   salt: string;
+  accountBalance : number;
   publicKey: string;
   privateKey: string;
   receivedMessages: message[];
@@ -25,7 +27,7 @@ export type user = {
 };
 
 export type FoodReview = {
-  id: number;
+  reviewId: number;
   reviewerId: number;
   food_id: number;
   reviewContent: string;

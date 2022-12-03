@@ -4,43 +4,27 @@ import { useNavigate } from "react-router-dom";
 import { url } from "../config";
 import { FoodProps } from "../types";
 import { Food } from "../components/Food";
+import { useGetFoodList } from "../hooks/useGetFoodList";
 
 export const FoodsPage = () => {
-  const FOODS: FoodProps[] = [
-    { id: 0, name: "Meat", price: 10, weight: 1000 },
-    { id: 1, name: "French fries", price: 10, weight: 1000 },
-  ];
+  const { foods} = useGetFoodList();
+  //const foods: FoodProps[] = [{ id: 0, name: "Meat", price: 10, weight: 1000 },{ id: 1, name: "French fries", price: 10, weight: 1000 },];
   const [name, setName] = useState("");
-  const [foods, setFoods] = useState<FoodProps[]>(FOODS);
+  const [foodsFiltered, setFoodsFiltered] = useState<FoodProps[] | undefined>(foods);
   const navigate = useNavigate();
 
   const filter = (keyword: string): void => {
     if (keyword !== "") {
-      const results = FOODS.filter((food) => {
+      const results = foods?.filter((food) => {
         return food.name.toLowerCase().startsWith(keyword.toLowerCase());
       });
-      setFoods(results);
+      setFoodsFiltered(results);
     } else {
-      setFoods(FOODS);
+      setFoodsFiltered(foods);
       // If the text field is empty, show all foods
     }
 
     setName(keyword);
-  };
-
-  const fetchFoods = () => {
-    fetch(`${url}/api/foods`, {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-      },
-    })
-      .then((response) => {
-        if (response.ok) {
-          //FOODS = response.json
-        }
-      })
-      .catch((error) => console.log("error", error));
   };
 
   return (
@@ -63,8 +47,8 @@ export const FoodsPage = () => {
         placeholder="Filter"
       ></Input>
       <Table>
-        {foods && foods.length > 0 ? (
-          foods.map(({ id, name, price, weight }) => (
+        {foodsFiltered && foodsFiltered.length > 0 ? (
+          foodsFiltered.map(({ id, name, price, weight }) => (
             <Food id={id} name={name} price={price} weight={weight} />
           ))
         ) : (

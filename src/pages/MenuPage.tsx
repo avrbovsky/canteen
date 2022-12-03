@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Input, Button, Table } from "reactstrap";
 import { url } from "../config";
 import { FoodProps, user } from "../types";
 import { OrderItem } from "../components/OrderItem";
+import { UserContext } from "../contexts/UserContext";
 
 type Food = {
   id: number;
@@ -13,14 +14,16 @@ type Food = {
 export const MenuPage = () => {
   const defaultDate = new Date();
   defaultDate.setDate(defaultDate.getDate() + 1);
+  const { currentUser, setCurrentUser } = useContext(UserContext);
   const [date, setDate] = useState<Date>(defaultDate);
-  const [credit, setCredit] = useState<number>(10);
-  const [menu, setMenu] = useState<FoodProps[]>([
-    { id: 0, name: "Meat", price: 10, weight: 1000 },
-    { id: 1, name: "French fries", price: 10, weight: 1000 },
-  ]);
+  const [credit, setCredit] = useState<number>(currentUser == undefined ? 0 : currentUser.accountBalance);
+  const [menu, setMenu] = useState<FoodProps[]>();
   const [addedFoods, setAddedFoods] = useState<Food[]>([]);
   const [total, setTotal] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState();
+
+
   const setTotalPriceOfFood = (id: number, price: number, amount: number) => {
     const foods = addedFoods.filter((food) => food.id !== id);
     const allFoods = [...foods, { id, price, amount }];
@@ -41,8 +44,28 @@ export const MenuPage = () => {
     }
   };
 
-  const fetchMenu = () => {
+
+  useEffect(() => {
     fetch(`${url}/api/menu`, {
+        method: "POST",
+        body: JSON.stringify({
+          date: date,
+        }),
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+        },
+      })
+      .then((response) => response.json())
+      .then((result: FoodProps[]) => {
+        setMenu(result);
+      })
+      .catch((error) => setError(error))
+      .finally(() => setIsLoading(false));
+  }, []);
+
+  
+  const fetchMenu = async () => {
+    await fetch(`${url}/api/menu`, {
       method: "POST",
       body: JSON.stringify({
         date: date,
@@ -51,12 +74,11 @@ export const MenuPage = () => {
         "Content-type": "application/json; charset=UTF-8",
       },
     })
-      .then((response) => {
-        if (response.ok) {
-          //setMenu(response.json)
-        }
-      })
-      .catch((error) => console.log("error", error));
+    .then((response) => response.json())
+    .then((result: FoodProps[]) => {
+      setMenu(result);
+    })
+    .catch((error) => console.log("error", error));
   };
 
   return (
@@ -74,9 +96,8 @@ export const MenuPage = () => {
       <Input
         type="date"
         name="username"
-        placeholder="Enter Username"
         defaultValue={date.toISOString().split("T")[0]}
-        onChange={(e) => setDate(new Date(e.currentTarget.value))}
+        onChange={(e) => {setDate(new Date(e.currentTarget.value));fetchMenu();}}
         required
       ></Input>
       <Table>
@@ -89,7 +110,7 @@ export const MenuPage = () => {
         </tr>
         {menu &&
           menu.map(({ ...props }) => (
-            <OrderItem {...props} setTotalPriceOfFood={setTotalPriceOfFood} />
+            <OrderItem {...props} />
           ))}
       </Table>
       <h5>Total of order: {total} €</h5>
