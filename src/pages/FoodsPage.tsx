@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input, Table } from "reactstrap";
 import { useNavigate } from "react-router-dom";
 import { url } from "../config";
@@ -7,11 +7,18 @@ import { Food } from "../components/Food";
 import { useGetFoodList } from "../hooks/useGetFoodList";
 
 export const FoodsPage = () => {
-  const { foods} = useGetFoodList();
+  const [foods,setFoods] = useState<FoodProps[] | undefined>();
   //const foods: FoodProps[] = [{ id: 0, name: "Meat", price: 10, weight: 1000 },{ id: 1, name: "French fries", price: 10, weight: 1000 },];
   const [name, setName] = useState("");
-  const [foodsFiltered, setFoodsFiltered] = useState<FoodProps[] | undefined>(foods);
+  const [foodsFiltered, setFoodsFiltered] = useState<FoodProps[] | undefined>();
   const navigate = useNavigate();
+
+
+  useEffect(() => {
+    const { foods} = useGetFoodList()
+    setFoodsFiltered(foods);
+    setFoods(foods)
+  }, []);
 
   const filter = (keyword: string): void => {
     if (keyword !== "") {
