@@ -2,64 +2,27 @@ import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { FoodComment } from "../components/FoodComment";
 import { url } from "../config";
-import { Food, FoodReview } from "../types";
+import { Food } from "../types";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { Button, Col, Input, Row, Table } from "reactstrap";
 import { UserContext } from "../contexts/UserContext";
 import { useGetUsers } from "../hooks/useGetUsers";
-import { useGetFoodList } from "../hooks/useGetFoodList";
-
-const reviews: FoodReview[] = [
-  {
-    reviewId: 1,
-    food_id: 1,
-    reviewContent: "Mnam",
-    reviewerId: 1,
-    reviewTime: new Date(),
-  },
-  {
-    reviewId: 2,
-    food_id: 1,
-    reviewContent: "Wau",
-    reviewerId: 2,
-    reviewTime: new Date(),
-  },
-  {
-    reviewId: 3,
-    food_id: 1,
-    reviewContent: "Fuj",
-    reviewerId: 1,
-    reviewTime: new Date(),
-  },
-];
-
-const dummyFood: Food = {
-  id: 1,
-  foodReviews: reviews,
-  menu_id: [1],
-  name: "Jedlo",
-  price: 3.5,
-  weight: 300,
-};
 
 export const FoodCommentsPage = () => {
-  //const { foods, isLoading } = useGetFoodList();
-  const params = useParams().id;
-  const [food, setFood] = useState<Food| undefined>();
+  const [food, setFood] = useState<Food | undefined>();
   const { users } = useGetUsers();
   const { currentUser } = useContext(UserContext);
   const [commentContent, setCommentContent] = useState<string>("");
   const { id } = useParams();
   const [addingComment, setAddingComment] = useState<boolean>(false);
 
-
   useEffect(() => {
-    fetch(`${url}/api/foodId/${params}`)
+    fetch(`${url}/api/foodId/${id}`)
       .then((response) => response.json())
       .then((result: Food) => {
         setFood(result);
       })
-      .catch((error) => console.log("error", error))
+      .catch((error) => console.log("error", error));
   }, []);
 
   const handleAddComment = () => {
@@ -105,19 +68,21 @@ export const FoodCommentsPage = () => {
           </tr>
         </thead>
         <tbody>
-          { food&&
-          <tr>
-            <td># {food?.id}</td>
-            <td>{food?.weight} g</td>
-            <td>{food?.price} €</td>
-          </tr>
-          }
+          {food && (
+            <tr>
+              <td># {food?.id}</td>
+              <td>{food?.weight} g</td>
+              <td>{food?.price} €</td>
+            </tr>
+          )}
         </tbody>
       </Table>
       <h3>Comments</h3>
       {!food?.foodReviews.length && <span>THERE ARE NO COMMENTS YET</span>}
       {food?.foodReviews.map((review) => {
-        return <FoodComment review={review} users={users} key={review.reviewId} />;
+        return (
+          <FoodComment review={review} users={users} key={review.reviewId} />
+        );
       })}
       <h5>Add comment</h5>
       <Row>

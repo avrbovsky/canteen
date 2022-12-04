@@ -17,7 +17,7 @@ export const FoodComment = ({ review, users }: Props) => {
       <span>{user?.login}</span>
       <span>{review.reviewContent}</span>
       <span>
-        {review.reviewTime.toISOString().split("T")[0]} <AiOutlineClockCircle />
+        {review.reviewTime.split("T")[0]} <AiOutlineClockCircle />
       </span>
     </Row>
   );

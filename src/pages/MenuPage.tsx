@@ -14,11 +14,9 @@ type AddedFood = {
 export const MenuPage = () => {
   const defaultDate = new Date();
   defaultDate.setDate(defaultDate.getDate() + 1);
-  const { currentUser, setCurrentUser } = useContext(UserContext);
+  const { currentUser } = useContext(UserContext);
   const [date, setDate] = useState<Date>(defaultDate);
-  const [credit, setCredit] = useState<number>(
-    currentUser == undefined ? 0 : currentUser.accountBalance
-  );
+  const [credit, setCredit] = useState<number>(currentUser!.accountBalance);
   const [menu, setMenu] = useState<Food[]>();
   const [addedFoods, setAddedFoods] = useState<AddedFood[]>([]);
   const [total, setTotal] = useState<number>(0);
@@ -42,6 +40,16 @@ export const MenuPage = () => {
     } else {
       setCredit((prevState) => prevState - total);
       setTotal(0);
+      fetch(`${url}/api/addCredit`, {
+        method: "PUT",
+        body: JSON.stringify({
+          credit: -total,
+          id: [currentUser?.id],
+        }),
+        headers: {
+          "Content-Type": "application/json; charset=UTF-8",
+        },
+      }).catch((error) => console.log("error", error));
     }
   };
 
@@ -104,7 +112,10 @@ export const MenuPage = () => {
           <th>Amount</th>
           <th>Total</th>
         </tr>
-        {menu && menu.map(({ ...props }) => <OrderItem {...props} />)}
+        {menu &&
+          menu.map(({ ...props }) => (
+            <OrderItem {...props} setTotalPriceOfFood={setTotalPriceOfFood} />
+          ))}
       </Table>
       <h5>Total of order: {total} €</h5>
       <Button onClick={pay}>Pay</Button>

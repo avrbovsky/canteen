@@ -1,9 +1,14 @@
-import { useContext, useEffect, useState, FC } from "react";
+import { useState, FC } from "react";
 import { FoodProps } from "../types";
-import { Input, Button } from "reactstrap";
+import { Input } from "reactstrap";
 
-export const OrderItem: FC<FoodProps> = (props) => {
-  const { id, name, price, weight, setTotalPriceOfFood } = props;
+export const OrderItem: FC<FoodProps> = ({
+  id,
+  name,
+  price,
+  weight,
+  setTotalPriceOfFood,
+}) => {
   const [amount, setAmount] = useState<number>(0);
   const changeAmount = (num: string) => {
     const amount = +num;

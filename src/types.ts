@@ -16,8 +16,6 @@ export type user = {
   id: number;
   isManager: boolean;
   login: string;
-  password: string;
-  salt: string;
   accountBalance: number;
   publicKey: string;
   privateKey: string;
@@ -31,7 +29,7 @@ export type FoodReview = {
   reviewerId: number;
   food_id: number;
   reviewContent: string;
-  reviewTime: Date;
+  reviewTime: string;
 };
 
 export type Food = {
