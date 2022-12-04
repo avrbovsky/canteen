@@ -55,7 +55,7 @@ export const AddCreditPage = () => {
     optionSelected?.forEach(({ value }) => keys.push(value));
 
     fetch(`${url}/api/addCredit`, {
-      method: "POST",
+      method: "PUT",
       body: JSON.stringify({
         credit: formData.credit,
         id: keys,

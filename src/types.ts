@@ -39,7 +39,7 @@ export type Food = {
   name: string;
   price: number;
   weight: number;
-  menu_id: number;
+  menu_id: number[];
   foodReviews: FoodReview[];
 };
 

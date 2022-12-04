@@ -62,7 +62,7 @@ export const AddMenuPage = () => {
           formData.date === undefined
             ? defaultDate.toISOString().split("T")[0]
             : formData.date,
-        id: keys,
+          foodIds: keys,
       })
     );
     fetch(`${url}/api/menuCreate`, {

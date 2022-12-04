@@ -7,17 +7,22 @@ import { Food } from "../components/Food";
 import { useGetFoodList } from "../hooks/useGetFoodList";
 
 export const FoodsPage = () => {
-  const [foods,setFoods] = useState<FoodProps[] | undefined>();
   //const foods: FoodProps[] = [{ id: 0, name: "Meat", price: 10, weight: 1000 },{ id: 1, name: "French fries", price: 10, weight: 1000 },];
+  const [foods,setFoods] = useState<FoodProps[]>();
+
   const [name, setName] = useState("");
-  const [foodsFiltered, setFoodsFiltered] = useState<FoodProps[] | undefined>();
+  const [foodsFiltered, setFoodsFiltered] = useState<FoodProps[]>();
   const navigate = useNavigate();
 
 
   useEffect(() => {
-    const { foods} = useGetFoodList()
-    setFoodsFiltered(foods);
-    setFoods(foods)
+    fetch(`${url}/api/foodList`)
+    .then((response) => response.json())
+    .then((result: FoodProps[]) => {
+      setFoodsFiltered(result);
+      setFoods(result)
+    })
+    .catch((error) => console.log("error", error))
   }, []);
 
   const filter = (keyword: string): void => {
