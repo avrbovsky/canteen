@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { SendFileBox } from "../components/SendFileBox";
 import { UserContext } from "../contexts/UserContext";
+import { Navigate } from "react-router-dom";
 
 const title = "SEND FILE TO A USER";
 export const SendFilePage = () => {
@@ -18,7 +19,7 @@ export const SendFilePage = () => {
       }}
     >
       <h3>{title}</h3>
-      {currentUser ? <SendFileBox /> : <></> /*<Navigate to={"/login"} />*/}
+      {currentUser ? <SendFileBox /> : <Navigate to={"/login"} />}
     </div>
   );
 };

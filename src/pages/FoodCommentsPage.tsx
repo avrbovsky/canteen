@@ -68,7 +68,7 @@ export const FoodCommentsPage = () => {
       method: "POST",
       body: JSON.stringify({
         userId: currentUser!.id,
-        foodId: food,
+        foodId: food?.id,
         reviewContent: commentContent,
       }),
       headers: {

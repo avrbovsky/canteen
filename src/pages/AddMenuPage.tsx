@@ -56,15 +56,6 @@ export const AddMenuPage = () => {
   const handleAddMenu = () => {
     const keys: number[] = [];
     optionSelected?.forEach(({ value }) => keys.push(value));
-    console.log(
-      JSON.stringify({
-        date:
-          formData.date === undefined
-            ? defaultDate.toISOString().split("T")[0]
-            : formData.date,
-          foodIds: keys,
-      })
-    );
     fetch(`${url}/api/menuCreate`, {
       method: "POST",
       body: JSON.stringify({

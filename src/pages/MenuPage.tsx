@@ -46,8 +46,8 @@ export const MenuPage = () => {
 
 
   useEffect(() => {
-    fetch(`${url}/api/menu`, {
-        method: "POST",
+    fetch(`${url}/api/menuList`, {
+        method: "GET",
         body: JSON.stringify({
           date: date,
         }),
@@ -65,8 +65,8 @@ export const MenuPage = () => {
 
   
   const fetchMenu = async () => {
-    await fetch(`${url}/api/menu`, {
-      method: "POST",
+    await fetch(`${url}/api/menuList`, {
+      method: "GET",
       body: JSON.stringify({
         date: date,
       }),
