@@ -18,7 +18,7 @@ export type user = {
   login: string;
   password: string;
   salt: string;
-  accountBalance : number;
+  accountBalance: number;
   publicKey: string;
   privateKey: string;
   receivedMessages: message[];

@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { Input, Button, Table } from "reactstrap";
 import { url } from "../config";
-import { FoodProps, user } from "../types";
 import { OrderItem } from "../components/OrderItem";
 import { UserContext } from "../contexts/UserContext";
+import { Food } from "../types";
 
-type Food = {
+type AddedFood = {
   id: number;
   amount: number;
   price: number;
@@ -16,13 +16,14 @@ export const MenuPage = () => {
   defaultDate.setDate(defaultDate.getDate() + 1);
   const { currentUser, setCurrentUser } = useContext(UserContext);
   const [date, setDate] = useState<Date>(defaultDate);
-  const [credit, setCredit] = useState<number>(currentUser == undefined ? 0 : currentUser.accountBalance);
-  const [menu, setMenu] = useState<FoodProps[]>();
-  const [addedFoods, setAddedFoods] = useState<Food[]>([]);
+  const [credit, setCredit] = useState<number>(
+    currentUser == undefined ? 0 : currentUser.accountBalance
+  );
+  const [menu, setMenu] = useState<Food[]>();
+  const [addedFoods, setAddedFoods] = useState<AddedFood[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState();
-
 
   const setTotalPriceOfFood = (id: number, price: number, amount: number) => {
     const foods = addedFoods.filter((food) => food.id !== id);
@@ -44,41 +45,33 @@ export const MenuPage = () => {
     }
   };
 
-
   useEffect(() => {
-    fetch(`${url}/api/menuList`, {
-        method: "GET",
-        body: JSON.stringify({
-          date: date,
-        }),
-        headers: {
-          "Content-type": "application/json; charset=UTF-8",
-        },
-      })
+    fetch(`${url}/api/menuDetail?date=${date}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
       .then((response) => response.json())
-      .then((result: FoodProps[]) => {
+      .then((result: Food[]) => {
         setMenu(result);
       })
       .catch((error) => setError(error))
       .finally(() => setIsLoading(false));
   }, []);
 
-  
   const fetchMenu = async () => {
-    await fetch(`${url}/api/menuList`, {
+    await fetch(`${url}/api/menuDetail?date=${date}`, {
       method: "GET",
-      body: JSON.stringify({
-        date: date,
-      }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
     })
-    .then((response) => response.json())
-    .then((result: FoodProps[]) => {
-      setMenu(result);
-    })
-    .catch((error) => console.log("error", error));
+      .then((response) => response.json())
+      .then((result: Food[]) => {
+        setMenu(result);
+      })
+      .catch((error) => console.log("error", error));
   };
 
   return (
@@ -97,7 +90,10 @@ export const MenuPage = () => {
         type="date"
         name="username"
         defaultValue={date.toISOString().split("T")[0]}
-        onChange={(e) => {setDate(new Date(e.currentTarget.value));fetchMenu();}}
+        onChange={(e) => {
+          setDate(new Date(e.currentTarget.value));
+          fetchMenu();
+        }}
         required
       ></Input>
       <Table>
@@ -108,10 +104,7 @@ export const MenuPage = () => {
           <th>Amount</th>
           <th>Total</th>
         </tr>
-        {menu &&
-          menu.map(({ ...props }) => (
-            <OrderItem {...props} />
-          ))}
+        {menu && menu.map(({ ...props }) => <OrderItem {...props} />)}
       </Table>
       <h5>Total of order: {total} €</h5>
       <Button onClick={pay}>Pay</Button>
