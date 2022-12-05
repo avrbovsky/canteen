@@ -16,8 +16,10 @@ export const MenuPage = () => {
   defaultDate.setDate(defaultDate.getDate() + 1);
   const { currentUser } = useContext(UserContext);
   const [date, setDate] = useState<Date>(defaultDate);
-  const [credit, setCredit] = useState<number>(currentUser!.accountBalance);
-  const [menu, setMenu] = useState<Food[]>();
+  const [credit, setCredit] = useState<number>(
+    currentUser ? currentUser.accountBalance : 0
+  );
+  const [menu, setMenu] = useState<Food[]>([]);
   const [addedFoods, setAddedFoods] = useState<AddedFood[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -54,8 +56,11 @@ export const MenuPage = () => {
   };
 
   useEffect(() => {
-    fetch(`${url}/api/menuDetail?date=${date}`, {
-      method: "GET",
+    fetch(`${url}/api/menuDetail`, {
+      method: "POST",
+      body: JSON.stringify({
+        date: date.toISOString().split("T")[0],
+      }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
@@ -64,13 +69,20 @@ export const MenuPage = () => {
       .then((result: Food[]) => {
         setMenu(result);
       })
-      .catch((error) => setError(error))
+      .catch((error) => {
+        setError(error);
+        console.log("spadol som");
+        console.log(error);
+      })
       .finally(() => setIsLoading(false));
   }, []);
 
   const fetchMenu = async () => {
-    await fetch(`${url}/api/menuDetail?date=${date}`, {
-      method: "GET",
+    await fetch(`${url}/api/menuDetail`, {
+      method: "POST",
+      body: JSON.stringify({
+        date: date.toISOString().split("T")[0],
+      }),
       headers: {
         "Content-type": "application/json; charset=UTF-8",
       },
@@ -105,17 +117,20 @@ export const MenuPage = () => {
         required
       ></Input>
       <Table>
-        <tr>
-          <th>Name</th>
-          <th>Price</th>
-          <th>Weight</th>
-          <th>Amount</th>
-          <th>Total</th>
-        </tr>
-        {menu &&
-          menu.map(({ ...props }) => (
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Weight</th>
+            <th>Amount</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {menu.map((props) => (
             <OrderItem {...props} setTotalPriceOfFood={setTotalPriceOfFood} />
           ))}
+        </tbody>
       </Table>
       <h5>Total of order: {total} €</h5>
       <Button onClick={pay}>Pay</Button>

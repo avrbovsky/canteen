@@ -19,25 +19,6 @@ export const MessageTable = () => {
   const { currentUser } = useContext(UserContext);
   const [downloading, setDownloading] = useState<boolean>(false);
 
-  // const handleFileDownload = (filename: string) => {
-  //   setDownloading(true);
-  //   fetch(`${url}/api/readMessage`, {
-  //     method: "GET",
-  //     body: JSON.stringify({
-  //       receiverId: currentUser!.id,
-  //       fileName: filename,
-  //     }),
-  //     headers: {
-  //       "Content-type": "application/json; charset=UTF-8",
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((result) => {})
-  //     .finally(() => {
-  //       setDownloading(false);
-  //     });
-  // };
-
   const handleFileDownload = (fileName: string) => {
     fetch(
       `${url}/api/readMessage?receiverId=${
