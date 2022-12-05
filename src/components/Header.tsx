@@ -46,7 +46,7 @@ export const Header = (): JSX.Element => {
               <Link to="/check_messages">Check Messages</Link>
             </NavItem>
           )}
-          {currentUser && (
+          {currentUser && !currentUser.isManager && (
             <NavItem style={{ margin: 5 }}>
               <Link to="/menu">Menu</Link>
             </NavItem>
@@ -56,33 +56,21 @@ export const Header = (): JSX.Element => {
               <Link to="/foods">Foods</Link>
             </NavItem>
           )}
-          {currentUser && (
+          {currentUser?.isManager && (
             <NavItem style={{ margin: 5 }}>
-              <Link to="/comments">Commets</Link>
+              <Link to="/addFood">Add Food</Link>
             </NavItem>
           )}
-
-          {
-            currentUser?.isManager && (
-              <NavItem style={{ margin: 5 }}>
-                <Link to="/addFood">Add Food</Link>
-              </NavItem>
-            )
-          }
-          {
-            currentUser?.isManager && (
-              <NavItem style={{ margin: 5 }}>
-                <Link to="/addMenu">Add Menu</Link>
-              </NavItem>
-            )
-          }
-          {
-            currentUser?.isManager && (
-              <NavItem style={{ margin: 5 }}>
-                <Link to="/addCredit">Add Credit</Link>
-              </NavItem>
-            )
-          }
+          {currentUser?.isManager && (
+            <NavItem style={{ margin: 5 }}>
+              <Link to="/addMenu">Add Menu</Link>
+            </NavItem>
+          )}
+          {currentUser?.isManager && (
+            <NavItem style={{ margin: 5 }}>
+              <Link to="/addCredit">Add Credit</Link>
+            </NavItem>
+          )}
           {currentUser && <Button onClick={handleLogoutClicked}>Logout</Button>}
         </Nav>
       </Navbar>

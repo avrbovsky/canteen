@@ -3,7 +3,8 @@ import { Input, Button, Table } from "reactstrap";
 import { url } from "../config";
 import { OrderItem } from "../components/OrderItem";
 import { UserContext } from "../contexts/UserContext";
-import { Food } from "../types";
+import { Food, user } from "../types";
+import { useGetUsers } from "../hooks/useGetUsers";
 
 type AddedFood = {
   id: number;
@@ -14,7 +15,8 @@ type AddedFood = {
 export const MenuPage = () => {
   const defaultDate = new Date();
   defaultDate.setDate(defaultDate.getDate() + 1);
-  const { currentUser } = useContext(UserContext);
+  const { users } = useGetUsers();
+  const { currentUser, setCurrentUser } = useContext(UserContext);
   const [date, setDate] = useState<Date>(defaultDate);
   const [credit, setCredit] = useState<number>(
     currentUser ? currentUser.accountBalance : 0
@@ -24,6 +26,13 @@ export const MenuPage = () => {
   const [total, setTotal] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState();
+
+  useEffect(() => {
+    if (users) {
+      const user = users.find((user) => user.id === currentUser!.id) as user;
+      setCurrentUser(user);
+    }
+  }, [users]);
 
   const setTotalPriceOfFood = (id: number, price: number, amount: number) => {
     const foods = addedFoods.filter((food) => food.id !== id);
@@ -42,6 +51,10 @@ export const MenuPage = () => {
     } else {
       setCredit((prevState) => prevState - total);
       setTotal(0);
+      setCurrentUser({
+        ...currentUser!,
+        accountBalance: currentUser!.accountBalance - total,
+      });
       fetch(`${url}/api/addCredit`, {
         method: "PUT",
         body: JSON.stringify({
